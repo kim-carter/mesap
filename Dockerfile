@@ -1,17 +1,25 @@
-FROM ubuntu:14.04
-LABEL Version="2.0" Description="MESAP transcriptome pipeline"
-MAINTAINER Bioinformatics <bioinformatics@telethonkids.org.au>
+FROM ubuntu:18.04
+LABEL Version="2.1" Description="MESAP transcriptome pipeline" MAINTAINER="kimwarwickcarter@gmail.com"
 
-#Update apt repository to a fast WA mirror
-RUN echo "deb http://mirror.internode.on.net/pub/ubuntu/ubuntu/ trusty main restricted universe multiverse" > /etc/apt/sources.list
-RUN echo "deb http://mirror.internode.on.net/pub/ubuntu/ubuntu trusty-updates main restricted universe multiverse" >> /etc/apt/sources.list
-RUN echo "deb http://security.ubuntu.com/ubuntu trusty-security main restricted universe multiverse" >> /etc/apt/sources.list
-RUN echo "deb http://cran.ms.unimelb.edu.au/bin/linux/ubuntu/ trusty/" >> /etc/apt/sources.list
+# Update apt repositories to a fast AU mirror and add AU R mirror
+RUN echo "deb http://au.archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse" > /etc/apt/sources.list
+RUN echo "deb http://au.archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
+RUN echo "deb http://au.archive.ubuntu.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
 
 # Install necessary system packages
-RUN apt-get update && apt-get install -y --force-yes build-essential libncurses5-dev bzip2 wget ncurses-base flex bison zlib1g-dev git unzip r-base libcurl4-gnutls-dev libxml2-dev vim cmake libboost-all-dev
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Australia/Perth
+RUN apt-get update && apt-get -y --force-yes install tzdata ca-certificates gnupg && rm -rf /var/lib/apt/lists/*
 
-# make informatics bash prompt printing full path
+# Add the apt key for CRAN
+RUN echo "deb https://cran.curtin.edu.au/bin/linux/ubuntu bionic-cran35/ " >> /etc/apt/sources.list
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+
+
+RUN apt-get update && apt-get install -y --force-yes r-base default-jre-headless && rm -rf /var/lib/apt/lists/*
+# apt-get install -y --force-yes build-essential libncurses5-dev bzip2 wget ncurses-base flex bison zlib1g-dev git unzip r-base libcurl4-gnutls-dev libxml2-dev vim cmake libboost-all-dev
+
+# force a useful bash prompt printing full path
 RUN echo 'PS1="[\u@docker \$PWD ] $ "' >> /etc/bash.bashrc
 
 # Make dirs, and copy MESAP software

@@ -37,7 +37,7 @@ COPY programs/ /mesap/programs
 COPY scripts/ /mesap/scripts
 
 # Setup R
-RUN R --no-save < /mesap/scripts/setupBioconductor.R
+RUN R -e 'install.packages("BiocManager", repos="https://cran.curtin.edu.au"); BiocManager::install(pkgs=c("ballgown","GenomicFeatures","GenomicAlignments","Rsubread")) '
 
 
 

@@ -36,18 +36,9 @@ COPY pipelines/ /mesap/pipelines
 COPY programs/ /mesap/programs
 COPY scripts/ /mesap/scripts
 
-# Setup R
+# Setup Bioconductor and key packages
+# - ballgown (for transcript expression), GenomicFeatures & GenomicAlignments (for count quantification)
 RUN R -e 'install.packages("BiocManager", repos="https://cran.curtin.edu.au"); BiocManager::install(pkgs=c("ballgown","GenomicFeatures","GenomicAlignments","Rsubread")) '
-
-
-
-# Setup oracle java (not openjdk)
-RUN mkdir /usr/local/java
-RUN cd /usr/local/java/ && tar -zxvf /mesap/programs/jdk-7u79-linux-x64.tar.gz
-ENV JAVA_HOME="/usr/local/java/jdk1.7.0_79/"
-RUN ln -s /usr/local/java/jdk1.7.0_79/bin/java /usr/bin/java
-RUN ln -s /usr/local/java/jdk1.7.0_79/bin/javac /usr/bin/javac
-
 
 # Now uncompress and install each of the MESAP components
 

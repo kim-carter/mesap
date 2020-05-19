@@ -15,9 +15,11 @@ RUN apt-get update && apt-get -y --force-yes install tzdata ca-certificates gnup
 RUN echo "deb https://cran.curtin.edu.au/bin/linux/ubuntu bionic-cran35/ " >> /etc/apt/sources.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 
-
+# Install base R and Java
 RUN apt-get update && apt-get install -y --force-yes r-base default-jre-headless && rm -rf /var/lib/apt/lists/*
-# apt-get install -y --force-yes build-essential libncurses5-dev bzip2 wget ncurses-base flex bison zlib1g-dev git unzip r-base libcurl4-gnutls-dev libxml2-dev vim cmake libboost-all-dev
+
+# Install core dependecies for R packages and other tools
+RUN apt-get update && apt-get install -y --force-yes openssl libssl-dev libncurses5-dev bzip2 wget ncurses-base flex bison zlib1g-dev git unzip libcurl4-gnutls-dev libxml2-dev vim cmake libboost-all-dev && rm -rf /var/lib/apt/lists/*
 
 # force a useful bash prompt printing full path
 RUN echo 'PS1="[\u@docker \$PWD ] $ "' >> /etc/bash.bashrc
@@ -40,11 +42,15 @@ COPY scripts/ /mesap/scripts
 # - ballgown (for transcript expression), GenomicFeatures & GenomicAlignments (for count quantification)
 RUN R -e 'install.packages("BiocManager", repos="https://cran.curtin.edu.au"); BiocManager::install(pkgs=c("ballgown","GenomicFeatures","GenomicAlignments","Rsubread")) '
 
+
 # Now uncompress and install each of the MESAP components
+# note: each tool is defined as an ARG variable first, which refers to the source programe version file
+#       programs are then installed and setup using the variable rather than a hardcoded file name
 
 # bpipe - and add it to the system path
-RUN cd /mesap/programs && tar -zxvf bpipe-0.9.9.2.tar.gz
-RUN ln -s /mesap/programs/bpipe-0.9.9.2/bin/bpipe /usr/bin
+ARG bpipe=bpipe-0.9.9.9.tar.gz
+RUN cd /mesap/programs && tar -zxvf $bpipe
+RUN ln -s /mesap/programs/$bpipe/bin/bpipe /usr/bin
 
 # samtools 1.3 
 RUN cd /mesap/programs; bunzip2 samtools-1.3.1.tar.bz2; tar xvf samtools-1.3.1.tar; cd samtools-1.3.1; make; make install

@@ -47,20 +47,27 @@ RUN R -e 'install.packages("BiocManager", repos="https://cran.curtin.edu.au"); B
 # note: each tool is defined as an ARG variable first, which refers to the source programe version file
 #       programs are then installed and setup using the variable rather than a hardcoded file name
 
-# bpipe - and add it to the system path
+# bpipe - file version is set in the ARG.  Change to upgrade 
 ARG bpipe=bpipe-0.9.9.9.tar.gz
 RUN cd /mesap/programs && tar -zxvf $bpipe
-RUN ln -s /mesap/programs/$bpipe/bin/bpipe /usr/bin
+# get the filename without extension and link it into the system bin path
+RUN temp=`basename -s .tar.gz $bpipe` && ln -s /mesap/programs/$temp/bin/bpipe /usr/bin
 
-# samtools 1.3 
+# stringtie - file version is set in the ARG.  Change to upgrade 
+ARG stringtie=stringtie-2.1.3b.Linux_x86_64.tar.gz
+RUN cd /mesap/programs && tar -zxvf $stringtie
+# get the filename without extension and link it into the system bin path
+RUN temp=`basename -s .tar.gz $stringtie` && ln -s /mesap/programs/$temp/stringtie /usr/bin
+
+# hisat2 - file version is set in the ARG.  Change to upgrade 
+ARG hisat=hisat2-2.2.0-Linux_x86_64.zip
+RUN cd /mesap/programs && unzip $hisat
+# get the filename without extension and link it into the system bin path
+RUN temp=`basename -s .tar.gz $hisat` && ln -s /mesap/programs/$temp/hisat2 /usr/bin && ln -s /mesap/programs/$temp/hisat2-build /usr/bin
+
+# samtools 1.3.1 - final version of the software - not being 
 RUN cd /mesap/programs; bunzip2 samtools-1.3.1.tar.bz2; tar xvf samtools-1.3.1.tar; cd samtools-1.3.1; make; make install
 RUN ln -s /mesap/programs/samtools-1.2/samtools /usr/bin
-
-# stringtie 1.0.4
-RUN cd /mesap/programs && tar -zxvf stringtie-1.3.0.Linux_x86_64.tar.gz
-
-# hisat2 2.0.4
-RUN cd /mesap/programs && unzip hisat2-2.0.4-Linux_x86_64.zip
 
 # samstat & html2text
 RUN cd /mesap/programs && tar -zxvf html2text-1.3.2a.tar.gz && cd html2text-1.3.2a && ./configure && make

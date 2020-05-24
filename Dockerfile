@@ -75,9 +75,20 @@ RUN apt-get update && apt-get install -y --force-yes html2text && rm -rf /var/li
 RUN cd /mesap/programs && tar -zxvf samstat-1.5.2.tar.gz && cd samstat-1.5.2 && ./configure && make
 RUN ln -s /mesap/programs/samstat-1.5.2/src/samstat /usr/bin/
 
-# fastqc 0.11.3 & fix its no-execute permissions
-RUN cd /mesap/programs && unzip fastqc_v0.11.3.zip
+# fastqc 0.11.9 & fix its no-execute permissions - file version is set in the ARG.  Change to upgrade
+ARG fastqc=fastqc_v0.11.9.zip
+RUN cd /mesap/programs && unzip $fastqc
 RUN chmod +x /mesap/programs/FastQC/fastqc
+
+# multiqc - installed through python3 pip - requires locales to be set
+# note: not specifically version controlled atm - should be added though, as by 
+# default pip will grab the latest
+RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.UTF-8
+RUN apt-get update && apt-get install -y --force-yes locales python3-pip && rm -rf /var/lib/apt/lists/ && pip3 install multiqc
+
+
 
 # fastq_merger
 RUN cd /mesap/programs && tar -xvf fastqmerger.tar && cd fastqmerger && gcc kslib.o -o fastq_merger  fastgmerger.c 

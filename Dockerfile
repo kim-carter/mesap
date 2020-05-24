@@ -65,13 +65,15 @@ RUN cd /mesap/programs && unzip $hisat
 # get the filename without extension and link it into the system bin path
 RUN temp=`basename -s .tar.gz $hisat` && ln -s /mesap/programs/$temp/hisat2 /usr/bin && ln -s /mesap/programs/$temp/hisat2-build /usr/bin
 
-# samtools 1.3.1 - final version of the software - not being 
-RUN cd /mesap/programs; bunzip2 samtools-1.3.1.tar.bz2; tar xvf samtools-1.3.1.tar; cd samtools-1.3.1; make; make install
-RUN ln -s /mesap/programs/samtools-1.2/samtools /usr/bin
+# samtools 1.10 - file version is set in the ARG.  Change to upgrade
+ARG samtools=samtools-1.10.tar.bz2
+RUN cd /mesap/programs; tar jxvf $samtools;
+RUN temp=`basename -s .tar.bz2 $samtools` && cd /mesap/programs/$temp; make; make install
 
-# samstat & html2text
-RUN cd /mesap/programs && tar -zxvf html2text-1.3.2a.tar.gz && cd html2text-1.3.2a && ./configure && make
+# samstat & html2text - note: this is the final version of samstat (from Timo Lassmann)
+RUN apt-get update && apt-get install -y --force-yes html2text && rm -rf /var/lib/apt/lists/*
 RUN cd /mesap/programs && tar -zxvf samstat-1.5.2.tar.gz && cd samstat-1.5.2 && ./configure && make
+RUN ln -s /mesap/programs/samstat-1.5.2/src/samstat /usr/bin/
 
 # fastqc 0.11.3 & fix its no-execute permissions
 RUN cd /mesap/programs && unzip fastqc_v0.11.3.zip

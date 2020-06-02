@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --force-yes openssl libssl-dev libncurs
 # force a useful bash prompt printing full path
 RUN echo 'PS1="[\u@docker \$PWD ] $ "' >> /etc/bash.bashrc
 
-# Make dirs, and copy MESAP software
+# Make dirs
 RUN mkdir /mesap
 RUN mkdir /mesap/doc
 RUN mkdir /mesap/modules
@@ -32,11 +32,9 @@ RUN mkdir /mesap/programs
 RUN mkdir /mesap/pipelines
 RUN mkdir /mesap/scripts
 RUN mkdir /mesap/mesap_data
-COPY doc/ /mesap/doc
-COPY modules/ /mesap/modules
-COPY pipelines/ /mesap/pipelines
+
+# Copy and setup necessary programs
 COPY programs/ /mesap/programs
-COPY scripts/ /mesap/scripts
 
 # Setup Bioconductor and key packages
 # - ballgown (for transcript expression), GenomicFeatures & GenomicAlignments (for count quantification)
@@ -95,6 +93,15 @@ RUN cd /mesap/programs && tar -xvf fastqmerger.tar && cd fastqmerger && gcc ksli
 
 # HCQC 0.90.8
 RUN cd /mesap/programs && tar -zxvf htqc-0.90.8-Source.tar.gz && cd htqc-0.90.8-Source && mkdir build && cd build && cmake .. && make && make install
+
+
+
+# Copy and setup necessary docs, scripts, modules and pipelines
+COPY doc/ /mesap/doc
+COPY modules/ /mesap/modules
+COPY pipelines/ /mesap/pipelines
+COPY scripts/ /mesap/scripts
+
 
 
 # Setup INPUT and OUTPUT directories for pipelines

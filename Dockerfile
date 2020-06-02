@@ -86,13 +86,8 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 ENV LANG en_US.UTF-8
 RUN apt-get update && apt-get install -y --force-yes locales python3-pip && rm -rf /var/lib/apt/lists/ && pip3 install multiqc
 
-
-
 # fastq_merger
 RUN cd /mesap/programs && tar -xvf fastqmerger.tar && cd fastqmerger && gcc kslib.o -o fastq_merger  fastgmerger.c 
-
-# HCQC 0.90.8
-RUN cd /mesap/programs && tar -zxvf htqc-0.90.8-Source.tar.gz && cd htqc-0.90.8-Source && mkdir build && cd build && cmake .. && make && make install
 
 
 

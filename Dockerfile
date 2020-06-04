@@ -24,7 +24,11 @@ RUN apt-get update && apt-get install -y --force-yes openssl libssl-dev libncurs
 # force a useful bash prompt printing full path
 RUN echo 'PS1="[\u@docker \$PWD ] $ "' >> /etc/bash.bashrc
 
-# Make dirs
+# Setup Bioconductor and key packages
+# - ballgown (for transcript expression), GenomicFeatures & GenomicAlignments (for count quantification)
+RUN R -e 'install.packages("BiocManager", repos="https://cran.curtin.edu.au"); BiocManager::install(pkgs=c("ballgown","GenomicFeatures","GenomicAlignments","Rsubread")) '
+
+# Make dirs for copying local data into
 RUN mkdir /mesap
 RUN mkdir /mesap/doc
 RUN mkdir /mesap/modules
@@ -33,13 +37,10 @@ RUN mkdir /mesap/pipelines
 RUN mkdir /mesap/scripts
 RUN mkdir /mesap/mesap_data
 
+
+
 # Copy and setup necessary programs
 COPY programs/ /mesap/programs
-
-# Setup Bioconductor and key packages
-# - ballgown (for transcript expression), GenomicFeatures & GenomicAlignments (for count quantification)
-RUN R -e 'install.packages("BiocManager", repos="https://cran.curtin.edu.au"); BiocManager::install(pkgs=c("ballgown","GenomicFeatures","GenomicAlignments","Rsubread")) '
-
 
 # Now uncompress and install each of the MESAP components
 # note: each tool is defined as an ARG variable first, which refers to the source programe version file
@@ -85,9 +86,6 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.UTF-8
 RUN apt-get update && apt-get install -y --force-yes locales python3-pip && rm -rf /var/lib/apt/lists/ && pip3 install multiqc
-
-# fastq_merger
-RUN cd /mesap/programs && tar -xvf fastqmerger.tar && cd fastqmerger && gcc kslib.o -o fastq_merger  fastgmerger.c 
 
 
 

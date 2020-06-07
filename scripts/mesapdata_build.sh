@@ -85,10 +85,10 @@ SPLICE="human_splice_site"
 EXON="human_exon"
 
 #Get the primary genome assembly (chroms and scaffolds only) for Human34
-ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/$FASTA_File.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/$FASTA_File.gz
 gzip -d $FASTA_File.gz
 # get the main annoation GTF file (ref chroms only) for Human34
-ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/gencode.v34.annotation.gtf.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/gencode.v34.annotation.gtf.gz
 gzip -d $GTF.gz
 
 # Run hisat2 to extract splice sites

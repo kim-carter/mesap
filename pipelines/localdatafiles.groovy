@@ -1,25 +1,20 @@
-BASEROOTDIR="/mesap"
+// use this var to change data file base location 
+BASEROOTDIR="/"
 
-GENOMEHG19="$BASEROOTDIR" + "/mesap_data/genomes/hg19/ucsc.hg19.fasta"
-GENOMEMM10="$BASEROOTDIR" + "/mesap_data/genomes/mm10/GRCm38.primary_assembly.genome.fa"
-GENOMEMM11="$BASEROOTDIR" + "/mesap_data/genomes/mm11/GRCm38.primary_assembly.genome.fa"
-GENOMERN6="$BASEROOTDIR" + "/mesap_data/genomes/rn6/Rattus_norvegicus.Rnor_6.0.dna.toplevel.ens87.fixed.fa"
+HUMAN_INDEX="$BASEROOTDIR" + "/mesap_data/human/GRCh38"
+HUMAN_GENOME="$BASEROOTDIR" + "/mesap_data/human/GRCh38.primary_assembly.genome.fa"
+HUMAN_GTF="$BASEROOTDIR" + "/mesap_data/human/gencode.v34.annotation.gtf"
+HUMAN_SPLICE="$BASEROOTDIR" + "/mesap_data/human/human_splice"
+HUMAN_EXON="$BASEROOTDIR" + "/mesap_data/human/human_exon"
 
+MOUSE_INDEX="$BASEROOTDIR" + "/mesap_data/mouse/GRCm38"
+MOUSE_GENOME="$BASEROOTDIR" + "/mesap_data/mouse/GRCm38.primary_assembly.genome.fa"
+MOUSE_GTF="$BASEROOTDIR" + "/mesap_data/mouse/gencode.vM25.annotation.gtf"
+MOUSE_SPLICE="$BASEROOTDIR" + "/mesap_data/mouse/mouse_splice"
+MOUSE_EXON="$BASEROOTDIR" + "/mesap_data/mouse/mouse_exon"
 
-HISAT2HG19="$BASEROOTDIR" + "/mesap_data/genomes/hg19/ucsc.hg19.hisat2"
-HISATMM10="$BASEROOTDIR" + "/mesap_data/genomes/mm10/GRCm38.hisat"
-HISAT2MM11="$BASEROOTDIR" + "/mesap_data/genomes/mm11/GRCm38.hisat2"
-HISAT2RN6="$BASEROOTDIR" + "/mesap_data/genomes/rn6/rno.ensembl87.hisat2"
-
-GENCODEV19_HS="$BASEROOTDIR" + "/mesap_data/annotation/hg19/gencode.v19.annotation.181016_level_1_2.gtf"
-GENCODEV19_HS_SPLICESITES="$BASEROOTDIR" + "/mesap_data/annotation/hg19/gencode.v19.annotation.181016_level_1_2_splicesites.hisat2.txt"
-GENCODEVM5_MM="$BASEROOTDIR" + "/mesap_data/annotation/mm10/gencode.vM5.annotation_level_1_2.gtf"
-GENCODEVM5_MM_SPLICESITES="$BASEROOTDIR" + "/mesap_data/annotation/mm10/gencode.vM5.annotation_level_1_2_splicesites.txt"
-GENCODEVM5_MM11="$BASEROOTDIR" + "/mesap_data/annotation/mm11/gencode.vM12.annotation.010217_level_1_2.gtf"
-GENCODEVM5_MM11_SPLICESITES="$BASEROOTDIR" + "/mesap_data/annotation/mm11/gencode.vM12.annotation.010217_level_1_2_splicesites.hisat2.txt"
-ENSEMBL84_RN6="$BASEROOTDIR" + "/mesap_data/annotation/rn6/Rattus_norvegicus.Rnor_6.0.84.gtf"
-ENSEMBL84_RN6_SPLICESITES="$BASEROOTDIR" + "/mesap_data/annotation/rn6/Rattus_norvegicus.Rnor_6.0.84_splicesites.txt"
-ENSEMBL87_RN6="$BASEROOTDIR" + "/mesap_data/annotation/rn6/Rattus_norvegicus.Rnor_6.0.87.chr.gtf"
-ENSEMBL87_RN6_SPLICESITES="$BASEROOTDIR" + "/mesap_data/annotation/rn6/Rattus_norvegicus.Rnor_6.0.87.chr_splicesites.hisat2.txt"
-
-
+RAT_INDEX="$BASEROOTDIR" + "/mesap_data/rat/Rattus_norvegicus"
+RAT_GENOME="$BASEROOTDIR" + "/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.dna.toplevel.ens100.fixed.fa"
+RAT_GTF="$BASEROOTDIR" + "/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.100.gtf"
+RAT_SPLICE="$BASEROOTDIR" + "/mesap_data/rat/rat_splice"
+RAT_EXON="$BASEROOTDIR" + "/mesap_data/rat/rat_exon"

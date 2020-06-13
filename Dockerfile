@@ -62,7 +62,7 @@ RUN temp=`basename -s .tar.gz $stringtie` && ln -s /mesap/programs/$temp/stringt
 ARG hisat=hisat2-2.2.0-Linux_x86_64.zip
 RUN cd /mesap/programs && unzip $hisat
 # get the filename without extension and link it into the system bin path
-RUN temp=`basename -s .tar.gz $hisat` && ln -s /mesap/programs/$temp/hisat2 /usr/bin && ln -s /mesap/programs/$temp/hisat2-build /usr/bin
+RUN temp=`basename -s .zip $hisat` && ln -s /mesap/programs/$temp/hisat2 /usr/bin && ln -s /mesap/programs/$temp/hisat2-build /usr/bin
 
 # samtools 1.10 - file version is set in the ARG.  Change to upgrade
 ARG samtools=samtools-1.10.tar.bz2
@@ -103,7 +103,7 @@ RUN mkdir /OUTPUT
 WORKDIR /OUTPUT
 
 # Add the user to sudo to enable extra admin flexibility if needed
-RUN echo '%mesap ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+#RUN echo '%mesap ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # run entrypoint to map uid and gid from user environment variables
-CMD ["/mesap/scripts/boot.sh"]
+#CMD ["/mesap/scripts/boot.sh"]

@@ -9,7 +9,7 @@ hisat_align =  {
 		transform("bam")
         	{
 	        exec """
-        	        $HISAT2 --dta --ss $SPLICE --exon $EXON -p $threads -x $INDEX  -1 $input1 -2 $input2  | $SAMTOOLS sort -m 10G -@ $threads -O bam -o ${output(output.prefix+".bam")}  -
+        	        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  -1 $input1 -2 $input2  | $SAMTOOLS sort -m -@ $threads -O bam -o ${output(output.prefix+".bam")}  -
 	        """
         	}
 	}
@@ -19,7 +19,7 @@ hisat_align =  {
                 transform("bam")
                 {
 	                exec """
-			        $HISAT2 --dta --ss $SPLICE --exon $EXON -p $threads -x $INDEX  -U $input1   | $SAMTOOLS sort -m 10G -@ $threads -O bam -o ${output(output.prefix+".bam")}  -		
+			        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  -U $input1   | $SAMTOOLS sort -m -@ $threads -O bam -o ${output(output.prefix+".bam")}  -		
 			"""
 		}
 	}

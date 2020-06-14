@@ -18,8 +18,8 @@ files = [file for file in os.listdir(cwd) if file.endswith('samstat.html')]
 files_list = [] 
 
 for file in files:
-    with open(file) as fp:
-        soup = BeautifulSoup(fp)
+    with open(cwd+"/"+file) as fp:
+        soup = BeautifulSoup(fp,features="html.parser")
         files_list.append(soup)
 
 
@@ -64,7 +64,7 @@ for i in range(0, len(files_list)):
 d3 = dict(zip(list(d1.keys()), list(d2.values())))
 
 # export the data to a csv file
-with open('SAMStat_results_summary.csv', 'w', newline='') as f:
+with open('/OUTPUT/qc/samstat_results_summary.csv', 'w', newline='') as f:
     w = csv.writer(f)
     w.writerow(['Sample_name', 'MAPQ30','Percent_MAPQ30','MAPQ3','Percent_MAPQ3','Unmapped','Percent_unmapped','Total'])
     for i in d3:

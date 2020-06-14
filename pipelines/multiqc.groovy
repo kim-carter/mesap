@@ -11,11 +11,9 @@ run_multiqc = {
 	
 	doc "Run multiqc to summarise fastQC files"
 
-	def indir = "qc"
-
 	produce ("multiqc_report.html")
 	{
-		exec "$MULTIQC -o $output.dir" 
+		exec "$MULTIQC qc/ alignments/ -o $output.dir" 
 	}
 }
 

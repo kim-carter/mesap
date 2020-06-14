@@ -98,7 +98,7 @@ make_gene_counts_human = {
         produce("genecounts.txt")
         {
         exec """
-        R --no-save < /mesap/scripts/gene_counts_human.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv /mesap/scripts/biomart_ensembl75_grc37_EnsIDNameDesc.txt /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
+        R --no-save < /mesap/scripts/gene_counts_human.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $HUMAN_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
         """
         }
 }
@@ -107,7 +107,7 @@ make_gene_counts_mouse = {
         produce("genecounts.txt")
         {
         exec """
-        R --no-save < /mesap/scripts/gene_counts_mouse.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv /mesap/scripts/biomart_ensembl87_grcm38_EnsIDNameDesc.txt /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
+        R --no-save < /mesap/scripts/gene_counts_mouse.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $MOUSE_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
 
         """
         }
@@ -117,7 +117,7 @@ make_gene_counts_rat = {
         produce("genecounts.txt")
         {
         exec """
-	R --no-save < /mesap/scripts/gene_counts_rat.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv /mesap/scripts/biomart_ensembl87_rn6_EnsIDNameDesc.txt /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
+	R --no-save < /mesap/scripts/gene_counts_rat.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $RAT_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
 	"""
 	}
 }

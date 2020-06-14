@@ -35,7 +35,7 @@ run_fastqc_parser = {
         doc "Run fastqc_parser to summarise ouput across all files"
         produce ("fastqc_summary.txt")
         {
-                exec "perl $BASEROOTDIR/scripts/fastqc_parser.pl qc/ > qc/fastqc_summary.txt"
+                exec "perl /mesap/scripts/fastqc_parser.pl qc/ > qc/fastqc_summary.txt"
         }
 }
 

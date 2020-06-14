@@ -4,7 +4,7 @@ library(stringr)
 
 
 #generate TXDB from the GFF we used for the HISAT alignment
-txdb <- makeTxDbFromGFF("/mesap/mesap_data/annotation/mm11/gencode.vM12.annotation.010217_level_1_2.gtf")
+txdb <- makeTxDbFromGFF(Sys.getenv("MOUSE_GTF"))
 
 #specify path in quotes to directory with .bam files
 fls = list.files(path="/OUTPUT/alignments/",recursive=TRUE, pattern="*.bam$", full=TRUE)

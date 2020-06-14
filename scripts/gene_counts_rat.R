@@ -4,8 +4,7 @@ library(stringr)
 
 
 #generate TXDB from the GFF we used for the HISAT alignment
-txdb <- makeTxDbFromGFF("/mesap/mesap_data/annotation/rn6/Rattus_norvegicus.Rnor_6.0.87.chr.gtf")
-
+txdb <- makeTxDbFromGFF(Sys.getenv("RAT_GTF"))
 
 #specify path in quotes to directory with .bam files
 fls = list.files(path="/OUTPUT/alignments/",recursive=TRUE, pattern="*.bam$", full=TRUE)

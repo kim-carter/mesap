@@ -62,7 +62,7 @@ RUN temp=`basename -s .tar.gz $stringtie` && ln -s /mesap/programs/$temp/stringt
 ARG hisat=hisat2-2.2.0-Linux_x86_64.zip
 RUN cd /mesap/programs && unzip $hisat
 # get the filename without extension and link it into the system bin path
-RUN temp=`basename -s .zip $hisat` && ln -s /mesap/programs/$temp/hisat2 /usr/bin && ln -s /mesap/programs/$temp/hisat2-build /usr/bin
+RUN temp=`basename -s -Linux_x86_64.zip $hisat` && ln -s /mesap/programs/$temp/hisat2 /usr/bin && ln -s /mesap/programs/$temp/hisat2-build /usr/bin
 
 # samtools 1.10 - file version is set in the ARG.  Change to upgrade
 ARG samtools=samtools-1.10.tar.bz2
@@ -106,4 +106,20 @@ WORKDIR /OUTPUT
 #RUN echo '%mesap ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # run entrypoint to map uid and gid from user environment variables
+
+
+
 #CMD ["/mesap/scripts/boot.sh"]
+
+ENV ENV="/etc/environment"
+
+ENV HUMAN_GTF=/mesap_data/human/gencode.v34.annotation.gtf 
+ENV MOUSE_GTF=/mesap_data/mouse/gencode.vM25.annotation.gtf
+ENV RAT_GTF=/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.100.gtf
+
+# Ensembl mappings for Ensembl Stable ID, Gene Name, Gene Description and NCBI/Ensembl ID obtained from Biomart
+ENV HUMAN_ENSMAP=/mesap_data/human/Biomart_E100_human.txt 
+ENV MOUSE_ENSMAP=/mesap_data/mouse/Biomart_E100_human.txt 
+ENV RAT_ENSMAP=/mesap_data/rat/Biomart_E100_rat.txt 
+
+#ENTRYPOINT [ "/mesap/scripts/env.sh" ]

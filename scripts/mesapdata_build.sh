@@ -16,87 +16,86 @@
 #######
 # RAT #
 #######
-BASE_PATH="."
-BASE_NAME="Rattus_norvegicus"
-HISAT2_PATH="."
-TMP_FASTA_File="Rattus_norvegicus.Rnor_6.0.dna.toplevel.fa"
-FASTA_File="$TMP_FASTA_File.ens100.fa"
-GTF="Rattus_norvegicus.Rnor_6.0.100.gtf"
-SPLICE="rat_splice_site"
-EXON="rat_exon"
+RAT_BASE_PATH="."
+RAT_BASE_NAME="Rattus_norvegicus"
+RAT_HISAT2_PATH="."
+RAT_TMP_FASTA_File="Rattus_norvegicus.Rnor_6.0.dna.toplevel.fa"
+RAT_FASTA_File="$TMP_FASTA_File.ens100.fa"
+RAT_GTF="Rattus_norvegicus.Rnor_6.0.100.gtf"
+RAT_SPLICE="rat_splice_site"
+RAT_EXON="rat_exon"
 
 # Get the primary genome assembly (chroms and scaffolds only) for Rat6 Ensembl 100
-wget http://ftp.ensembl.org/pub/release-100/fasta/rattus_norvegicus/dna/$TMP_FASTA_File.gz
-gzip -d $TMP_FASTA_File.gz
+wget http://ftp.ensembl.org/pub/release-100/fasta/rattus_norvegicus/dna/$RAT_TMP_FASTA_File.gz
+gzip -d $RAT_TMP_FASTA_File.gz
 
 # Fix the fasta header names to numerical chromosomes, so they match the GTF
-cat  $TMP_FASTA_File | sed 's/ .*$//g' > $FASTA_File
+cat  $RAT_TMP_FASTA_File | sed 's/ .*$//g' > $RAT_FASTA_File
 
 # get the main annoation GTF file (ref chroms only) for Rat6 Ensembl 100
-wget ftp://ftp.ensembl.org/pub/current_gtf/rattus_norvegicus/$GTF.gz
-gzip -d $GTF.gz
+wget ftp://ftp.ensembl.org/pub/current_gtf/rattus_norvegicus/$RAT_GTF.gz
+gzip -d $RAT_GTF.gz
 
 # Run hisat2 to extract splice sites
-$HISAT2_PATH/hisat2_extract_splice_sites.py ${GTF} > ${SPLICE}
+$RAT_HISAT2_PATH/hisat2_extract_splice_sites.py ${RAT_GTF} > ${RAT_SPLICE}
 # Run hisat2 to extract exons
-$HISAT2_PATH/hisat2_extract_exons.py ${GTF} > ${EXON}
+$RAT_HISAT2_PATH/hisat2_extract_exons.py ${RAT_GTF} > ${RAT_EXON}
 
 # Run hisat2 index builder
-$HISAT2_PATH/hisat2-build -p 16 --exon ${EXON} --ss ${SPLICE} ${FASTA_File} ${BASE_NAME}
+$RAT_HISAT2_PATH/hisat2-build -p 16 --exon ${RAT_EXON} --ss ${RAT_SPLICE} ${RAT_FASTA_File} ${RAT_BASE_NAME}
 
 
 #########
 # MOUSE #
 #########
-BASE_PATH="."
-BASE_NAME="GRCm38"
-HISAT2_PATH="."
-FASTA_File="GRCm38.primary_assembly.genome.fa"
-GTF="gencode.vM25.annotation.gtf"
-SPLICE="mouse_splice_site"
-EXON="mouse_exon"
+MOUSE_BASE_PATH="."
+MOUSE_BASE_NAME="GRCm38"
+MOUSE_HISAT2_PATH="."
+MOUSE_FASTA_File="GRCm38.primary_assembly.genome.fa"
+MOUSE_GTF="gencode.vM25.annotation.gtf"
+MOUSE_SPLICE="mouse_splice_site"
+MOUSE_EXON="mouse_exon"
 
 # Get the primary genome assembly (chroms and scaffolds only) for M25
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M25/$FASTA_File.gz
-gzip -d $FASTA_File.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M25/$MOUSE_FASTA_File.gz
+gzip -d $MOUSE_FASTA_File.gz
 # get the main annoation GTF file (ref chroms only) for M25
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M25/$GTF.gz
-gzip -d $GTF.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M25/$MOUSE_GTF.gz
+gzip -d $MOUSE_GTF.gz
 
 # Run hisat2 to extract splice sites
-$HISAT2_PATH/hisat2_extract_splice_sites.py ${GTF} > ${SPLICE}
+$MOUSE_HISAT2_PATH/hisat2_extract_splice_sites.py ${MOUSE_GTF} > ${MOUSE_SPLICE}
 
 # Run hisat2 to extract exons
-$HISAT2_PATH/hisat2_extract_exons.py ${GTF} > ${EXON}
+$MOUSE_HISAT2_PATH/hisat2_extract_exons.py ${MOUSE_GTF} > ${MOUSE_EXON}
 
 # Run hisat2 index builder
-$HISAT2_PATH/hisat2-build -p 16 --exon ${EXON} --ss ${SPLICE} ${FASTA_File} ${BASE_NAME}
+$MOUSE_HISAT2_PATH/hisat2-build -p 16 --exon ${MOUSE_EXON} --ss ${MOUSE_SPLICE} ${MOUSE_FASTA_File} ${MOUSE_BASE_NAME}
 
 
 #########
 # HUMAN #
 #########
-BASE_PATH="."
-BASE_NAME="GRCh38"
-HISAT2_PATH="."
-FASTA_File="GRCh38.primary_assembly.genome.fa"
-GTF="gencode.v34.annotation.gtf"
-SPLICE="human_splice_site"
-EXON="human_exon"
+HUMAN_BASE_PATH="."
+HUMAN_BASE_NAME="GRCh38"
+HUMAN_HISAT2_PATH="."
+HUMAN_FASTA_File="GRCh38.primary_assembly.genome.fa"
+HUMAN_GTF="gencode.v34.annotation.gtf"
+HUMAN_SPLICE="human_splice_site"
+HUMAN_EXON="human_exon"
 
 #Get the primary genome assembly (chroms and scaffolds only) for Human34
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/$FASTA_File.gz
-gzip -d $FASTA_File.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/$HUMAN_FASTA_File.gz
+gzip -d $HUMAN_FASTA_File.gz
 # get the main annoation GTF file (ref chroms only) for Human34
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/gencode.v34.annotation.gtf.gz
-gzip -d $GTF.gz
+gzip -d $HUMAN_GTF.gz
 
 # Run hisat2 to extract splice sites
-$HISAT2_PATH/hisat2_extract_splice_sites.py ${GTF} > ${SPLICE}
+$HUMAN_HISAT2_PATH/hisat2_extract_splice_sites.py ${HUMAN_GTF} > ${HUMAN_SPLICE}
 # Run hisat2 to extract exons
-$HISAT2_PATH/hisat2_extract_exons.py ${GTF} > ${EXON}
+$HUMAN_HISAT2_PATH/hisat2_extract_exons.py ${HUMAN_GTF} > ${HUMAN_EXON}
 
 # Run hisat2 index builder
-$HISAT2_PATH/hisat2-build -p 16 --exon ${EXON} --ss ${SPLICE} ${FASTA_File} ${BASE_NAME}
-
+$HUMAN_HISAT2_PATH/hisat2-build -p 16 --exon ${HUMAN_EXON} --ss ${HUMAN_SPLICE} ${HUMAN_FASTA_File} ${HUMAN_BASE_NAME}
 

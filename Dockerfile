@@ -119,7 +119,7 @@ ENV RAT_GTF=/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.100.gtf
 
 # Ensembl mappings for Ensembl Stable ID, Gene Name, Gene Description and NCBI/Ensembl ID obtained from Biomart
 ENV HUMAN_ENSMAP=/mesap_data/human/Biomart_E100_human.txt 
-ENV MOUSE_ENSMAP=/mesap_data/mouse/Biomart_E100_human.txt 
+ENV MOUSE_ENSMAP=/mesap_data/mouse/Biomart_E100_mouse.txt 
 ENV RAT_ENSMAP=/mesap_data/rat/Biomart_E100_rat.txt 
 
 #ENTRYPOINT [ "/mesap/scripts/env.sh" ]

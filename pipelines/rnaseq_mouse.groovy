@@ -11,5 +11,5 @@ EXON=MOUSE_EXON
 
 MERGED_TRANSCRIPTS = "merged_asm/stringtiemerged.gtf"
 
-Bpipe.run {"%_R*.fastq.gz"  * [ hisat_align + stringtie]  + makeassemblylist + stringtiemerge + "%_R*.fastq.gz"  * [stringtiequant] + make_ballgown_obj  + make_gene_counts_mouse}
+Bpipe.run {"%_R*.fastq.gz"  * [ hisat_align + stringtie]  + makeassemblylist + stringtiemerge + "%_R*.fastq.gz"  * [stringtiequant] + make_ballgown_obj  + make_gene_counts_mouse + make_transcript_expression}
 

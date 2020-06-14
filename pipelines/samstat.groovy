@@ -2,7 +2,7 @@
 about title: "SAMStat pipeline."
 def BASEROOTDIR="/mesap"
 
-def SAMSTAT = "$BASEROOTDIR" + "/programs/samstat-1.5.2/src/samstat"
+def SAMSTAT = "samstat"
 
 def get_sample_filename_nopath_withextension(filename)
 {
@@ -52,5 +52,17 @@ run_samstat_parser = {
                 exec "perl $BASEROOTDIR/scripts/samstat_parser.pl $path > qc/samstat_summary.txt"
         }
 }
+
+
+run_samstat_summarise = {
+        output.dir = "qc"
+
+	doc "Run samstat to summarise ouput across all files"
+        produce ("samstat_results_summary.csv")
+        {
+                exec "python3 /mesap/scripts/samstat_parse_summaries.py"
+        }
+}
+
 
 Bpipe.run { "%.[bs]am" * [run_samstat] + run_samstat_parser }

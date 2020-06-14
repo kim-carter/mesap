@@ -1,8 +1,13 @@
 #!usr/bin/perl
 
 # Reads CSV counts in from R with Gencode ENSID as first column
-# We then fix this ID, and look up with the ENSEMBL 75 (last hg19) annot
-# and write a final file
+# We then fix this ID, and look up with the provided ensembl mapping file and write a final file
+#
+# Note we expect the following fields from Biomart:
+# 1. Ensembl (Stable) Gene ID
+# 2. Gene name (this is equiv to symbol)
+# 3. Gene Description 
+# 4. NCBI ID (EntrezID)
 
 use strict;
 
@@ -28,7 +33,7 @@ while(<ENS>)
 
 	my @cols = split("\t",$line);
 
-	#Ensembl Gene ID  	Associated genename / sympbol 			Description
+	#Ensembl Gene ID  	Associated genename / sympbol 			Description  EntrezID
 
 	$ensmap{$cols[0]} = $line;
 }
@@ -43,7 +48,7 @@ while(<IN>)
 	if ($header==0)
 	{
 		$line =~ s/,/\t/g;
-		print OUT "$line\tEnsemblID\tSymbol\tDescription\n";
+		print OUT "$line\tEnsemblID\tSymbol\tDescription\tEntrezID\n";
 		$header=1;
 		next;
 	}
@@ -72,7 +77,7 @@ while(<IN>)
 		print MISS "$cols[0]\n";
 		
 		#save empty extra identifiers to outputs
-		print OUT $line."\t\t\t\n";
+		print OUT $line."\t\t\t\t\n";
 		
 		#die "Unable to find identifier $cols[0] ... aborting\n";
 	}

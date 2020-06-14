@@ -131,4 +131,111 @@ make_transcript_expression = {
 	}
 }
 
+def get_sample_filename_nopath_withextension(filename)
+{
+
+  def returned_value = ""
+
+  // strip path
+  def m = filename.split("/")[-1]
+
+  return m
+}
+
+def get_filepath(filename)
+{
+
+  def returned_value = ""
+
+  def i = filename.lastIndexOf("/")
+  def m = filename.substring(0,i)
+
+  //return filepath
+  return m
+}
+
+samstat = {
+    output.dir = "qc"
+	
+	doc "Run Samstat over .bam alignments"
+	transform (".bam") to (".bam.samstat.html")
+	{
+			// from here forces bpipe to look back and find .bam inputs
+			from("bam") {
+			exec """
+			$SAMSTAT $input1 
+			"""
+			}
+	}
+}
+
+samstat_parser = {
+    output.dir = "qc"
+
+	def path = get_filepath("$input1")
+
+        doc "Run samstat_parser to summarise ouput across all files"
+        produce ("samstat_summary.txt")
+        {
+                exec "perl /mesap/scripts/samstat_parser.pl /OUTPUT/qc/ > /OUTPUT/qc/samstat_summary.txt"
+        }
+}
+
+samstat_summarise = {
+        output.dir = "qc"
+
+        doc "Run samstat to summarise ouput across all files"
+        produce ("samstat_results_summary.csv")
+        {
+                exec "python3 /mesap/scripts/samstat_parse_summaries.py"
+        }
+}
+
+multiqc = {
+    output.dir = "qc"
+	
+	doc "Run multiqc to summarise output across all files"
+
+	produce ("multiqc_report.html")
+	{
+		exec "$MULTIQC qc/ alignments/ -o $output.dir" 
+	}
+}
+
+def get_sample_filename_nopath_noextension(filename)
+{
+
+  def returned_value = ""
+
+  // strip path
+  def m = filename.split("/")[-1]
+
+  //return first part of file name irrespective of extensions (s)
+  return m.split("\\.")[0]
+}
+
+@intermediate
+fastqc = {
+    output.dir = "qc"
+	
+	doc "Run fastqc to QC fastQ file"
+
+	def filename = get_sample_filename_nopath_noextension("$input1")
+
+	produce (filename+"_fastqc.zip",filename+"_fastqc.html")
+	{
+		exec "$FASTQC -o $output.dir $input1" 
+	}
+}
+
+fastqc_parser = {
+        output.dir = "qc"
+
+        doc "Run fastqc_parser to summarise ouput across all files"
+        produce ("fastqc_summary.txt")
+        {
+                exec "perl /mesap/scripts/fastqc_parser.pl qc/ > qc/fastqc_summary.txt"
+        }
+}
+
 

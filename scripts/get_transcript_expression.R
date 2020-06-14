@@ -10,13 +10,18 @@ gtf <- read.delim(paste0("/OUTPUT/alignments/",files[1]), header=FALSE,comment.c
 colnames(gtf) <- c("seqname", "source", "feature", "start", "end", "score", "strand", "frame", "attributes")
 gtf <- subset(gtf,feature=="transcript") # only need transcripts
 
+## note sometimes stringtie uses gene_name, other times ref_gene_name in the attributes
+gtf$attributes <-  gsub("ref_gene_name", "gene_name", gtf$attributes) #standarise gene_name from attributes column
 gene_ids <-  gsub(".*gene_id (.*?);.*", "\\1", gtf$attributes) #get gene_id from attributes column
 transcript_ids<- gsub(".*transcript_id (.*?);.*", "\\1", gtf$attributes) #get transcript_id from attributes column
-ref_gene_names<- gsub(".*ref_gene_name (.*?);.*", "\\1", gtf$attributes) #get transcript_id from attributes column
+gene_names<- gsub(".*gene_name (.*?);.*", "\\1", gtf$attributes) #get transcript_id from attributes column
+
+# note novel transcripts don't have gene_names.  Add an extra cleanup to blank these
+gene_names<- gsub(".*gene_id.*","", gene_names) 
 
 # create initial columns, ordered by the transcript_id of the first file - they should all be these same as 
 # they are created from the merged stringtie output
-tmp=data.frame(transcript_id=transcript_ids,gene_id=gene_ids,gene_names=ref_gene_names)
+tmp=data.frame(transcript_id=transcript_ids,gene_id=gene_ids,gene_names=gene_names)
 tmp <- tmp[order(tmp$transcript_id),]
 
 # create out data frame
@@ -27,15 +32,13 @@ for (i in 1:length(files)) {
     gtf <- read.delim(paste0("/OUTPUT/alignments/",files[i]), header=FALSE,comment.char = "#",stringsAsFactors=F)
     colnames(gtf) <- c("seqname", "source", "feature", "start", "end", "score", "strand", "frame", "attributes")
     gtf <- subset(gtf,feature=="transcript") # only need transcripts
-
-    gene_ids <-  gsub(".*gene_id (.*?);.*", "\\1", gtf$attributes) #get gene_id from attributes column
+    
     transcript_ids<- gsub(".*transcript_id (.*?);.*", "\\1", gtf$attributes) #get transcript_id from attributes column
-    ref_gene_names<- gsub(".*ref_gene_name (.*?);.*", "\\1", gtf$attributes) #get transcript_id from attributes column
     tpm <-  gsub(".*TPM (.*?);.*", "\\1", gtf$attributes) #get TPM from attributes column
     fpkm <- gsub(".*FPKM (.*?);.*", "\\1", gtf$attributes) #get FPKM from attributes column
 
     # create output
-    tmp <- data.frame(transcript_id=transcript_ids,gene_id=gene_ids,tpm=tpm,fpkm=fpkm)
+    tmp <- data.frame(transcript_id=transcript_ids,tpm=tpm,fpkm=fpkm)
     
     # order by transcript_id for consistency
     tmp <- tmp[order(tmp$transcript_id),]
@@ -47,4 +50,3 @@ for (i in 1:length(files)) {
 }
 
 write.table(out,file="transcript_expression.txt", sep="\t", quote=FALSE, row.names=FALSE, col.names=TRUE)
-

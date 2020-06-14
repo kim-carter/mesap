@@ -16,7 +16,7 @@ ref_gene_names<- gsub(".*ref_gene_name (.*?);.*", "\\1", gtf$attributes) #get tr
 
 # create initial columns, ordered by the transcript_id of the first file - they should all be these same as 
 # they are created from the merged stringtie output
-tmp=data.frame(transcript_id=transcript_ids,gene_id=gene_ids)
+tmp=data.frame(transcript_id=transcript_ids,gene_id=gene_ids,gene_names=ref_gene_names)
 tmp <- tmp[order(tmp$transcript_id),]
 
 # create out data frame
@@ -43,7 +43,8 @@ for (i in 1:length(files)) {
     # filename_tmp and filename_fpkm  - note we are stripping the .gtf 
     out[paste0(gsub(".gtf","",files[i]), "_tpm")]<-tmp$tpm
     out[paste0(gsub(".gtf","",files[i]), "_fpkm")]<-tmp$fpkm
-    #write.table(out, paste0(x,"_transcript.txt"), sep="\t", quote=FALSE, row.names=FALSE, col.names=TRUE)
+    
 }
 
+write.table(out,file="transcript_expression.txt", sep="\t", quote=FALSE, row.names=FALSE, col.names=TRUE)
 

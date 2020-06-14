@@ -123,7 +123,7 @@ make_gene_counts_rat = {
 }
 
 make_transcript_expression = {
-	produce("transcript_level_expression.txt")
+	produce("transcript_expression.txt")
 	{
 	exec """
        	R --no-save < /mesap/scripts/get_transcript_expression.R

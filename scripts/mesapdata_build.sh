@@ -63,6 +63,10 @@ gzip -d $MOUSE_FASTA_File.gz
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M25/$MOUSE_GTF.gz
 gzip -d $MOUSE_GTF.gz
 
+# rename original, and extract only the high quality level 1 and level 2 annotations
+mv $MOUSE_GTF $MOUSE_GTF.orig
+awk '{if($0~"level (1|2);"){print $0}}' $MOUSE_GTF.orig > $MOUSE_GTF
+
 # Run hisat2 to extract splice sites
 $MOUSE_HISAT2_PATH/hisat2_extract_splice_sites.py ${MOUSE_GTF} > ${MOUSE_SPLICE}
 
@@ -90,6 +94,10 @@ gzip -d $HUMAN_FASTA_File.gz
 # get the main annoation GTF file (ref chroms only) for Human34
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/gencode.v34.annotation.gtf.gz
 gzip -d $HUMAN_GTF.gz
+
+# rename original, and extract only the high quality level 1 and level 2 annotations
+mv $HUMAN_GTF $HUMAN_GTF.orig
+awk '{if($0~"level (1|2);"){print $0}}' $HUMAN_GTF.orig > $HUMAN_GTF
 
 # Run hisat2 to extract splice sites
 $HUMAN_HISAT2_PATH/hisat2_extract_splice_sites.py ${HUMAN_GTF} > ${HUMAN_SPLICE}

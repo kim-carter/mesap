@@ -1,7 +1,7 @@
 @intermediate
 hisat_align =  {
-        doc "Align reads to reference using Hisat2"
-        output.dir = "alignments"
+	doc "Align reads to reference using Hisat2"
+	output.dir = "/OUTPUT/alignments"
 
 	if (input.input.size==2)
 	{
@@ -29,7 +29,7 @@ hisat_align =  {
 
 @intermediate
 stringtie = {
-	output.dir = "assembly"
+	output.dir = "/OUTPUT/assembly"
 	transform("gtf") {
 	exec """
 		$STRINGTIE -p $threads $input.bam -o $output -G $GTF
@@ -40,7 +40,7 @@ stringtie = {
 
 @intermediate
 makeassemblylist = {
-	output.dir="assembly"
+	output.dir="/OUTPUT/assembly"
 	doc "Makes a list of all assemblies for merging"
 
 	produce ("merged.txt")
@@ -54,11 +54,11 @@ makeassemblylist = {
 
 @intermediate
 stringtiemerge = {
-	output.dir="merged_asm"
-        produce ("stringtiemerged.gtf")
+	output.dir="/OUTPUT/merged_asm"
+	produce ("stringtiemerged.gtf")
 	{
 	exec """
-		$STRINGTIE --merge -G $GTF -p $threads assembly/merged.txt -o $MERGED_TRANSCRIPTS
+		$STRINGTIE --merge -G $GTF -p $threads /OUTPUT/assembly/merged.txt -o $MERGED_TRANSCRIPTS
 	"""
 	}
 }
@@ -66,63 +66,68 @@ stringtiemerge = {
 
 @intermediate
 stringtiequant = {
-        def target0 =output.prefix.prefix
+    def target0 =output.prefix.prefix
 	def target1 =output.prefix.prefix+".bam"
-        def target2 =output.prefix.prefix.prefix + ".gtf"
-        def target3 =output.prefix.prefix.prefix + "cov_refs.gtf"
+    def target2 =output.prefix.prefix.prefix + ".gtf"
+    def target3 =output.prefix.prefix.prefix + "cov_refs.gtf"
 
-	output.dir="alignments"
+	output.dir="/OUTPUT/alignments"
  
         def outputs = [
-                ("alignments/$target0/" + "e2t.ctab")
+                ("/OUTPUT/alignments/$target0/" + "e2t.ctab")
         ]
         produce(outputs)
         {
         exec  """
-                $STRINGTIE -p $threads  -G $MERGED_TRANSCRIPTS -e -b alignments/$target0 -o alignments/$target2 -C alignments/$target3 alignments/$target1 
+                $STRINGTIE -p $threads  -G $MERGED_TRANSCRIPTS -e -b /OUTPUT/alignments/$target0 -o /OUTPUT/alignments/$target2 -C /OUTPUT/alignments/$target3 /OUTPUT/alignments/$target1 
         """
         }
 }
 
 
 make_ballgown_obj = {
+	output.dir = "/OUTPUT/"
 	produce("bg.rda")
 	{
-	exec """
-	$GLUE_4_BALLGOWN
-	"""
+		exec """
+		$GLUE_4_BALLGOWN
+		"""
 	}
 }
 
 make_gene_counts_human = {
-        produce("genecounts.txt")
-        {
-        exec """
-        R --no-save < /mesap/scripts/gene_counts_human.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $HUMAN_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
-        """
-        }
+	output.dir = "/OUTPUT/"
+	produce("genecounts.txt")
+	{
+	exec """
+	R --no-save < /mesap/scripts/gene_counts_human.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $HUMAN_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
+	"""
+	}
 }
 
 make_gene_counts_mouse = {
-        produce("genecounts.txt")
-        {
-        exec """
-        R --no-save < /mesap/scripts/gene_counts_mouse.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $MOUSE_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
+	output.dir = "/OUTPUT/"
+	produce("genecounts.txt")
+	{
+	exec """
+	R --no-save < /mesap/scripts/gene_counts_mouse.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $MOUSE_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
 
-        """
-        }
+	"""
+	}
 }
 
 make_gene_counts_rat = {
-        produce("genecounts.txt")
-        {
-        exec """
+	output.dir = "/OUTPUT/"
+	produce("genecounts.txt")
+	{
+	exec """
 	R --no-save < /mesap/scripts/gene_counts_rat.R; perl /mesap/scripts/convert_gencode_genecounts.pl /OUTPUT/tmpcounts.csv $RAT_ENSMAP /OUTPUT/genecounts.txt; rm /OUTPUT/tmpcounts.csv
 	"""
 	}
 }
 
 make_transcript_expression = {
+	output.dir = "/OUTPUT/"
 	produce("transcript_expression.txt")
 	{
 	exec """
@@ -155,7 +160,7 @@ def get_filepath(filename)
 }
 
 samstat = {
-    output.dir = "qc"
+    output.dir = "/OUTPUT/qc"
 	
 	doc "Run Samstat over .bam alignments"
 	transform (".bam") to (".bam.samstat.html")
@@ -170,7 +175,7 @@ samstat = {
 }
 
 samstat_parser = {
-    output.dir = "qc"
+    output.dir = "/OUTPUT/qc"
 
 	def path = get_filepath("$input1")
 
@@ -182,7 +187,7 @@ samstat_parser = {
 }
 
 samstat_summarise = {
-        output.dir = "qc"
+        output.dir = "/OUTPUT/qc"
 
         doc "Run samstat to summarise ouput across all files"
         produce ("samstat_results_summary.csv")
@@ -192,13 +197,13 @@ samstat_summarise = {
 }
 
 multiqc = {
-    output.dir = "qc"
+    output.dir = "/OUTPUT/qc"
 	
 	doc "Run multiqc to summarise output across all files"
 
 	produce ("multiqc_report.html")
 	{
-		exec "$MULTIQC qc/ alignments/ -o $output.dir" 
+		exec "$MULTIQC /OUTPUT/qc/ /OUTPUT/alignments/ -o $output.dir" 
 	}
 }
 
@@ -216,7 +221,7 @@ def get_sample_filename_nopath_noextension(filename)
 
 @intermediate
 fastqc = {
-    output.dir = "qc"
+    output.dir = "/OUTPUT/qc"
 	
 	doc "Run fastqc to QC fastQ file"
 
@@ -229,13 +234,13 @@ fastqc = {
 }
 
 fastqc_parser = {
-        output.dir = "qc"
+	output.dir = "/OUTPUT/qc"
 
-        doc "Run fastqc_parser to summarise ouput across all files"
-        produce ("fastqc_summary.txt")
-        {
-                exec "perl /mesap/scripts/fastqc_parser.pl qc/ > qc/fastqc_summary.txt"
-        }
+	doc "Run fastqc_parser to summarise ouput across all files"
+	produce ("fastqc_summary.txt")
+	{
+			exec "perl /mesap/scripts/fastqc_parser.pl /OUTPUT/qc/ > /OUTPUT/qc/fastqc_summary.txt"
+	}
 }
 
 

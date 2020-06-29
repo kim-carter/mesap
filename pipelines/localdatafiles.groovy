@@ -1,5 +1,5 @@
 // use this var to change data file base location 
-BASEROOTDIR="/"
+/* BASEROOTDIR="/"
 
 HUMAN_INDEX="$BASEROOTDIR" + "/mesap_data/human/GRCh38"
 HUMAN_GENOME="$BASEROOTDIR" + "/mesap_data/human/GRCh38.primary_assembly.genome.fa"
@@ -18,3 +18,4 @@ RAT_GENOME="$BASEROOTDIR" + "/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.dna.topl
 RAT_GTF="$BASEROOTDIR" + "/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.100.gtf"
 RAT_SPLICE="$BASEROOTDIR" + "/mesap_data/rat/rat_splice"
 RAT_EXON="$BASEROOTDIR" + "/mesap_data/rat/rat_exon"
+*/

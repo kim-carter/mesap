@@ -113,13 +113,31 @@ WORKDIR /OUTPUT
 
 ENV ENV="/etc/environment"
 
-ENV HUMAN_GTF=/mesap_data/human/gencode.v34.annotation.gtf 
-ENV MOUSE_GTF=/mesap_data/mouse/gencode.vM25.annotation.gtf
-ENV RAT_GTF=/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.100.gtf
-
 # Ensembl mappings for Ensembl Stable ID, Gene Name, Gene Description and NCBI/Ensembl ID obtained from Biomart
 ENV HUMAN_ENSMAP=/mesap_data/human/Biomart_E100_human.txt 
 ENV MOUSE_ENSMAP=/mesap_data/mouse/Biomart_E100_mouse.txt 
 ENV RAT_ENSMAP=/mesap_data/rat/Biomart_E100_rat.txt 
 
+# Reference files
+ENV HUMAN_INDEX=/mesap_data/human/GRCh38
+ENV HUMAN_GENOME=/mesap_data/human/GRCh38.primary_assembly.genome.fa
+ENV HUMAN_GTF=/mesap_data/human/gencode.v34.annotation.gtf
+ENV HUMAN_SPLICE=/mesap_data/human/human_splice
+ENV HUMAN_EXON=/mesap_data/human/human_exon
+
+ENV MOUSE_INDEX=/mesap_data/mouse/GRCm38
+ENV MOUSE_GENOME=/mesap_data/mouse/GRCm38.primary_assembly.genome.fa
+ENV MOUSE_GTF=/mesap_data/mouse/gencode.vM25.annotation.gtf
+ENV MOUSE_SPLICE=/mesap_data/mouse/mouse_splice
+ENV MOUSE_EXON=/mesap_data/mouse/mouse_exon
+
+ENV RAT_INDEX=/mesap_data/rat/Rattus_norvegicus
+ENV RAT_GENOME=/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.dna.toplevel.ens100.fixed.fa
+ENV RAT_GTF=/mesap_data/rat/Rattus_norvegicus.Rnor_6.0.100.gtf
+ENV RAT_SPLICE=/mesap_data/rat/rat_splice
+ENV RAT_EXON=/mesap_data/rat/rat_exon
+
+
 #ENTRYPOINT [ "/mesap/scripts/env.sh" ]
+
+## SINGULARITY has no simple workdir to inherit from docker (it's a separate option)

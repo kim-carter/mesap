@@ -7,13 +7,13 @@ def MULTIQC = "multiqc"
 
 // software will autodetect any useful files in qc dir
 run_multiqc = {
-        output.dir = "qc"
+    output.dir = "/OUTPUT/qc"
 	
 	doc "Run multiqc to summarise fastQC files"
 
 	produce ("multiqc_report.html")
 	{
-		exec "$MULTIQC qc/ alignments/ -o $output.dir" 
+		exec "$MULTIQC /OUTPUT/qc/ /OUTPUT/alignments/ -o $output.dir" 
 	}
 }
 

@@ -17,7 +17,7 @@ def get_sample_filename_nopath_noextension(filename)
 }
 
 run_fastqc = {
-        output.dir = "qc"
+        output.dir = "/OUTPUT/qc"
 	
 	doc "Run fastqc to QC fastQ file"
 
@@ -30,12 +30,12 @@ run_fastqc = {
 }
 
 run_fastqc_parser = {
-        output.dir = "qc"
+        output.dir = "/OUTPUT/qc"
 
         doc "Run fastqc_parser to summarise ouput across all files"
         produce ("fastqc_summary.txt")
         {
-                exec "perl /mesap/scripts/fastqc_parser.pl qc/ > qc/fastqc_summary.txt"
+                exec "perl /mesap/scripts/fastqc_parser.pl /OUTPUT/qc/ > /OUTPUT/qc/fastqc_summary.txt"
         }
 }
 

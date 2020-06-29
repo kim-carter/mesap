@@ -11,7 +11,7 @@ fls = list.files(path="/OUTPUT/alignments/",recursive=TRUE, pattern="*.bam$", fu
 bfl <- BamFileList(fls)
 
 #check bam file names are right
-bfl
+#bfl
 
 # run the counts
 exbygene <- exonsBy(txdb, "gene")

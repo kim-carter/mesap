@@ -248,8 +248,8 @@ fastqc_parser = {
 
 
 check_output = {
-    doc "Checkng output dir exists "	
-	outdir = new File("/tmp");
+    doc "Checking output dir exists "	
+	outdir = new File("/OUTPUT");
     if (outdir.exists())
 	{
 		// check if we have write access
@@ -273,13 +273,13 @@ check_output = {
 
 check_input = {
 	doc "Check input"
-	indir = new File("/tmp");
+	indir = new File("/INPUT");
 	if (indir.exists())
 	{
 		if (input.input.size==0)
 		{
 			// no input files specified, so look for anything matching our default pattern
-			input = glob("/tmp/*.unp")
+			input = glob("/INPUT/%_R*.fastq.gz")
 		}
 			// exists, so move forward      
 	}

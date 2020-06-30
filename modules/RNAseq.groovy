@@ -3,8 +3,9 @@ hisat_align =  {
 	doc "Align reads to reference using Hisat2"
 	output.dir = "/OUTPUT/alignments"
 
-	def outbam = output.prefix+".bam"
-	def outreport = output.prefix+".summary.txt"
+	// the .prefix.prefix strips the .gz extension off the file names
+	def outbam = output.prefix.prefix+".bam"
+	def outreport = output.prefix.prefix+".summary.txt"
 
 	if (input.input.size==2)
 	{

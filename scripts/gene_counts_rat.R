@@ -2,6 +2,16 @@ library(GenomicFeatures)
 library(GenomicAlignments)
 library(stringr)
 
+# get number of available cores/threads for parallel processing
+maxthread <- as.numeric(Sys.getenv("THREAD"))
+if (is.na(maxthread))
+{
+    # default if not set
+    maxthread<-1  
+}
+
+# set max number of workers
+register(MulticoreParam(workers = maxthread), default = TRUE)
 
 #generate TXDB from the GFF we used for the HISAT alignment
 txdb <- makeTxDbFromGFF(Sys.getenv("RAT_GTF"))

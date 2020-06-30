@@ -50,7 +50,7 @@ makeassemblylist = {
 	produce ("merged.txt")
 	{
 	exec """
-	find /OUTPUT/assembly -name '/OUTPUT/*.gtf'  > $output
+	find /OUTPUT/assembly -name '*.gtf'  > $output
 	"""
 	}
 }

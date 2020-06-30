@@ -193,10 +193,13 @@ samstat_summarise = {
         output.dir = "/OUTPUT/qc"
 
         doc "Run samstat to summarise ouput across all files"
-        produce ("samstat_results_summary.csv")
-        {
-                exec "python3 /mesap/scripts/samstat_parse_summaries.py"
-        }
+        
+		
+		// Note this function is forced to run every time the pipeline is run, to ensure it finds any new files
+		//produce ("samstat_results_summary.csv")
+        //{
+        exec "python3 /mesap/scripts/samstat_parse_summaries.py"
+        //}
 }
 
 multiqc = {
@@ -204,10 +207,11 @@ multiqc = {
 	
 	doc "Run multiqc to summarise output across all files"
 
-	produce ("multiqc_report.html")
-	{
+	// Note this function is forced to run every time the pipeline is run, to ensure it finds any new files
+	//produce ("multiqc_report.html")
+	//{
 		exec "$MULTIQC /OUTPUT/qc/ /OUTPUT/alignments/ -o $output.dir" 
-	}
+	//}
 }
 
 def get_sample_filename_nopath_noextension(filename)

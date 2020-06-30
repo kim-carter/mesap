@@ -12,7 +12,7 @@ hisat_align =  {
 		produce($outbam,$outreport)
         {
 	        exec """
-        	        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --new-summary --summary-file $outreport  -1 $input1 -2 $input2  | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -
+        	        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --no-unal --new-summary --summary-file $outreport  -1 $input1 -2 $input2  | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -
 	        """
         }
 	}
@@ -22,7 +22,7 @@ hisat_align =  {
         produce($outbam,$outreport)
         {
 	        exec """
-			    $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --new-summary --summary-file $outreport  -U $input1   | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -		
+			    $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --no-unal  --new-summary --summary-file $outreport  -U $input1   | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -		
 			"""
 		}
 	}

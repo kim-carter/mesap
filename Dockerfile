@@ -102,14 +102,7 @@ RUN mkdir /INPUT
 RUN mkdir /OUTPUT
 WORKDIR /OUTPUT
 
-# Add the user to sudo to enable extra admin flexibility if needed
-#RUN echo '%mesap ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# run entrypoint to map uid and gid from user environment variables
-
-
-
-#CMD ["/mesap/scripts/boot.sh"]
 
 ENV ENV="/etc/environment"
 
@@ -138,6 +131,14 @@ ENV RAT_SPLICE=/mesap_data/rat/rat_splice
 ENV RAT_EXON=/mesap_data/rat/rat_exon
 
 
-#ENTRYPOINT [ "/mesap/scripts/env.sh" ]
+# run entrypoint to map uid and gid from user environment variables
+CMD ["/mesap/scripts/boot.sh"]
 
+#
 ## SINGULARITY has no simple workdir to inherit from docker (it's a separate option)
+#
+# TODO
+# add new summary option to hisat
+# add option to stop non-aligned being written
+# register(ncpus) to R when running - pass as command line parameter
+# ie ie too many cpu cores, memory will overload    

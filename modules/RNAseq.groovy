@@ -9,7 +9,7 @@ hisat_align =  {
 	if (input.input.size==2)
 	{
         	//paired mode
-		produce($outbam,$outreport)
+		produce(outbam,outreport)
         {
 	        exec """
         	        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --no-unal --new-summary --summary-file $outreport  -1 $input1 -2 $input2  | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -
@@ -19,7 +19,7 @@ hisat_align =  {
 	else
 	{
 		//single-end mode
-        produce($outbam,$outreport)
+        produce(outbam,outreport)
         {
 	        exec """
 			    $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --no-unal  --new-summary --summary-file $outreport  -U $input1   | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -		
@@ -61,7 +61,7 @@ stringtiemerge = {
 	produce ("stringtiemerged.gtf")
 	{
 	exec """
-		$STRINGTIE --merge -G $GTF -p $threads /OUTPUT/assembly/merged.txt -o $MERGED_TRANSCRIPTS
+		$STRINGTIE --merge -G $GTF -p $threads /OUTPUT/assembly/merged.txt -o /OUTPUT/merged_asm/stringtiemerged.gtf
 	"""
 	}
 }
@@ -82,7 +82,7 @@ stringtiequant = {
         produce(outputs)
         {
         exec  """
-                $STRINGTIE -p $threads  -G $MERGED_TRANSCRIPTS -e -b /OUTPUT/alignments/$target0 -o /OUTPUT/alignments/$target2 -C /OUTPUT/alignments/$target3 /OUTPUT/alignments/$target1 
+                $STRINGTIE -p $threads  -G /OUTPUT/merged_asm/stringtiemerged.gtf -e -b /OUTPUT/alignments/$target0 -o /OUTPUT/alignments/$target2 -C /OUTPUT/alignments/$target3 /OUTPUT/alignments/$target1 
         """
         }
 }
@@ -253,7 +253,7 @@ fastqc_parser = {
 
 check_output = {
     doc "Checking output dir exists "	
-	outdir = new File("/OUTPUT");
+	def outdir = new File("/OUTPUT");
     if (outdir.exists())
 	{
 		// check if we have write access
@@ -277,7 +277,7 @@ check_output = {
 
 check_input = {
 	doc "Check input"
-	indir = new File("/INPUT");
+	def indir = new File("/INPUT");
 	if (indir.exists())
 	{
 		if (input.input.size==0)

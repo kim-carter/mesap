@@ -10,4 +10,4 @@ EXON=System.getenv("HUMAN_EXON")
 
 
 
-Bpipe.run {"%_R*.fastq.gz"  * [ hisat_align + stringtie] + makeassemblylist + stringtiemerge + "%_R*.fastq.gz"  * [stringtiequant] + make_ballgown_obj + make_gene_counts_human + make_transcript_expression}
+Bpipe.run {check_input + check_output + "%_R*.fastq.gz"  * [ hisat_align + stringtie] + makeassemblylist + stringtiemerge + "%_R*.fastq.gz"  * [stringtiequant] + make_ballgown_obj + make_gene_counts_human + make_transcript_expression}

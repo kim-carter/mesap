@@ -172,7 +172,7 @@ samstat = {
 			// from here forces bpipe to look back and find .bam inputs
 			from("bam") {
 			exec """
-			$SAMSTAT $input1 
+				cd /OUTPUT; $SAMSTAT $input1 
 			"""
 			}
 	}

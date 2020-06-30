@@ -133,12 +133,3 @@ ENV RAT_EXON=/mesap_data/rat/rat_exon
 
 # run entrypoint to map uid and gid from user environment variables
 CMD ["/mesap/scripts/boot.sh"]
-
-#
-## SINGULARITY has no simple workdir to inherit from docker (it's a separate option)
-#
-# TODO
-# add new summary option to hisat
-# add option to stop non-aligned being written
-# register(ncpus) to R when running - pass as command line parameter
-# ie ie too many cpu cores, memory will overload    

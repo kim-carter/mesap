@@ -3,23 +3,26 @@ hisat_align =  {
 	doc "Align reads to reference using Hisat2"
 	output.dir = "/OUTPUT/alignments"
 
+	def outbam = output.prefix+".bam"
+	def outreport = output.prefix+".summary.txt"
+
 	if (input.input.size==2)
 	{
         	//paired mode
-		transform("bam")
-        	{
+		produce($outbam,$outreport)
+        {
 	        exec """
-        	        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  -1 $input1 -2 $input2  | $SAMTOOLS sort -@ $threads -O bam -o ${output(output.prefix+".bam")}  -
+        	        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --new-summary --summary-file $outreport  -1 $input1 -2 $input2  | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -
 	        """
-        	}
+        }
 	}
 	else
 	{
 		//single-end mode
-                transform("bam")
-                {
-	                exec """
-			        $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  -U $input1   | $SAMTOOLS sort -@ $threads -O bam -o ${output(output.prefix+".bam")}  -		
+        produce($outbam,$outreport)
+        {
+	        exec """
+			    $HISAT2 --dta --known-splicesite-infile $SPLICE -p $threads -x $INDEX  --new-summary --summary-file $outreport  -U $input1   | $SAMTOOLS sort -@ $threads -O bam -o $outbam  -		
 			"""
 		}
 	}

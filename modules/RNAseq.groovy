@@ -182,11 +182,11 @@ samstat_parser = {
 
 	def path = get_filepath("$input1")
 
-        doc "Run samstat_parser to summarise ouput across all files"
-        produce ("samstat_summary.txt")
-        {
-                exec "perl /mesap/scripts/samstat_parser.pl /OUTPUT/qc/ > /OUTPUT/qc/samstat_summary.txt"
-        }
+	doc "Run samstat_parser to summarise ouput across all files"
+	//produce ("samstat_summary.txt")
+	//{
+			exec "perl /mesap/scripts/samstat_parser.pl /OUTPUT/qc/ > /OUTPUT/qc/samstat_summary.txt"
+	//}
 }
 
 samstat_summarise = {

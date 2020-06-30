@@ -2,11 +2,11 @@ load "localprograms.groovy"
 load "localdatafiles.groovy"
 load "/mesap/modules/RNAseq.groovy"
 
-INDEX=HUMAN_INDEX
-GENOME=HUMAN_GENOME
-GTF=HUMAN_GTF
-SPLICE=HUMAN_SPLICE
-EXON=HUMAN_EXON
+INDEX=System.getenv("HUMAN_INDEX")
+GENOME=System.getenv("HUMAN_GENOME")
+GTF=System.getenv("HUMAN_GTF")
+SPLICE=System.getenv("HUMAN_SPLICE")
+EXON=System.getenv("HUMAN_EXON")
 
 
 

@@ -2,11 +2,11 @@ load "localprograms.groovy"
 load "localdatafiles.groovy"
 load "../modules/RNAseq.groovy"
 
-INDEX=MOUSE_INDEX
-GENOME=MOUSE_GENOME
-GTF=MOUSE_GTF
-SPLICE=MOUSE_SPLICE
-EXON=MOUSE_EXON
+INDEX=System.getenv("MOUSE_INDEX")
+GENOME=System.getenv("MOUSE_GENOME")
+GTF=System.getenv("MOUSE_GTF")
+SPLICE=System.getenv("MOUSE_SPLICE")
+EXON=System.getenv("MOUSE_EXON")
 
 
 

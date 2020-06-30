@@ -2,11 +2,11 @@ load "localprograms.groovy"
 load "localdatafiles.groovy"
 load "../modules/RNAseq.groovy"
 
-INDEX=RAT_INDEX
-GENOME=RAT_GENOME
-GTF=RAT_GTF
-SPLICE=RAT_SPLICE
-EXON=RAT_EXON
+INDEX=System.getenv("RAT_INDEX")
+GENOME=System.getenv("RAT_GENOME")
+GTF=System.getenv("RAT_GTF")
+SPLICE=System.getenv("RAT_SPLICE")
+EXON=System.getenv("RAT_EXON")
 
 
 

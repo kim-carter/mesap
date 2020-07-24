@@ -11,11 +11,10 @@ run_multiqc = {
 	
 	doc "Run multiqc to summarise fastQC files"
 
-	// Note this function is forced to run every time the pipeline is run, to ensure it finds any new files
-	//produce ("multiqc_report.html")
-	//{
+	produce ("multiqc_report.html")
+	{
 		exec "$MULTIQC -f /OUTPUT/qc/ /OUTPUT/alignments/ -o $output.dir" 
-	//}
+	}
 }
 
 Bpipe.run { run_fastqc }

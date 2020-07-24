@@ -184,10 +184,10 @@ samstat_parser = {
 	def path = get_filepath("$input1")
 
 	doc "Run samstat_parser to summarise ouput across all files"
-	//produce ("samstat_summary.txt")
-	//{
+	produce ("samstat_summary.txt")
+	{
 			exec "perl /mesap/scripts/samstat_parser.pl /OUTPUT/qc/ > /OUTPUT/qc/samstat_summary.txt"
-	//}
+	}
 }
 
 samstat_summarise = {
@@ -196,11 +196,11 @@ samstat_summarise = {
         doc "Run samstat to summarise ouput across all files"
         
 		
-		// Note this function is forced to run every time the pipeline is run, to ensure it finds any new files
-		//produce ("samstat_results_summary.csv")
-        //{
-        exec "python3 /mesap/scripts/samstat_parse_summaries.py"
-        //}
+		
+		produce ("samstat_results_summary.csv")
+        {
+        	exec "python3 /mesap/scripts/samstat_parse_summaries.py"
+        }
 }
 
 multiqc = {
@@ -208,11 +208,11 @@ multiqc = {
 	
 	doc "Run multiqc to summarise output across all files"
 
-	// Note this function is forced to run every time the pipeline is run, to ensure it finds any new files
-	//produce ("multiqc_report.html")
-	//{
+	
+	produce ("multiqc_report.html")
+	{
 		exec "$MULTIQC -f /OUTPUT/qc/ /OUTPUT/alignments/ -o $output.dir" 
-	//}
+	}
 }
 
 def get_sample_filename_nopath_noextension(filename)
@@ -284,7 +284,7 @@ check_input = {
 		if (input.input.size==0)
 		{
 			// no input files specified, so look for anything matching our default pattern
-			input = glob("/INPUT/%_R*.fastq.gz")
+			fail "Can't read from /INPUT directory. Please check your files are named correctly and try something like /INPUT/*.fastq.gz"
 		}
 			// exists, so move forward      
 	}
@@ -293,5 +293,4 @@ check_input = {
 		fail "Can't find /INPUT directory.  Please check it is mapped correctly and try again"
 	}
 
-	forward(input)
 }

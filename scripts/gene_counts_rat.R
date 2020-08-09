@@ -2,17 +2,26 @@ library(GenomicFeatures)
 library(GenomicAlignments)
 library(stringr)
 
+# get number of available cores/threads for parallel processing
+maxthread <- as.numeric(Sys.getenv("THREAD"))
+if (is.na(maxthread))
+{
+    # default if not set
+    maxthread<-1  
+}
+
+# set max number of workers
+register(MulticoreParam(workers = maxthread), default = TRUE)
 
 #generate TXDB from the GFF we used for the HISAT alignment
-txdb <- makeTxDbFromGFF("/mesap/mesap_data/annotation/rn6/Rattus_norvegicus.Rnor_6.0.87.chr.gtf")
-
+txdb <- makeTxDbFromGFF(Sys.getenv("RAT_GTF"))
 
 #specify path in quotes to directory with .bam files
 fls = list.files(path="/OUTPUT/alignments/",recursive=TRUE, pattern="*.bam$", full=TRUE)
 bfl <- BamFileList(fls)
 
 #check bam file names are right
-bfl
+#bfl
 
 # run the counts
 exbygene <- exonsBy(txdb, "gene")

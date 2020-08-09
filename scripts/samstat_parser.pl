@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-my $html2text = "/mesap/programs/html2text-1.3.2a/html2text";
+my $html2text = "html2text"; # installed systemwide
 
 use strict;
 

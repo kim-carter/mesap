@@ -1,6 +1,13 @@
 BASEROOTDIR="/mesap"
-HISAT2 = "$BASEROOTDIR" + "/programs/hisat2-2.0.4/hisat2"
-STRINGTIE = "$BASEROOTDIR" + "/programs/stringtie-1.3.0.Linux_x86_64/stringtie"
-SAMTOOLS = "$BASEROOTDIR"+ "/programs/samtools-1.3.1/samtools"
+// these are in system-wide path
+HISAT2 = "hisat2"
+STRINGTIE = "stringtie"
+SAMTOOLS = "samtools"
+SAMSTAT = "samstat"
+MULTIQC = "multiqc"
+
+// these are in mesap dir only
 CHECKBAM = "$BASEROOTDIR"+ "/scripts/check_bam_files.sh"
 GLUE_4_BALLGOWN = "$BASEROOTDIR"+ "/pipelines/make_ballgown_obj.sh"
+FASTQC = "$BASEROOTDIR"+"/programs/FastQC/fastqc"
+

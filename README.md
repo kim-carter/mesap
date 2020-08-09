@@ -1,5 +1,27 @@
 # This is the gitlabs homepage for the MEdical Sequence Analysis Pipeline for Transcriptomes (otherwise known as MESAP_T) docker image
 
+# BUILD
+# docker build -t mesap_dev_2.2 .
+
+# testing
+# docker run -it -v /MESAP/DATA/rat/:/INPUT -v /MESAP/mesap_data/:/mesap_data -v /MESAP/OUTPUT/rat/:/OUTPUT mesap_dev_2.2:latest
+
+# Singularity
+# singularity build mesap_2.2.sif docker-daemon://mesap_dev_2.2:latest
+
+# singularity exec --bind /MESAP/mesap_data:/mesap_data,/MESAP/DATA/rat/:/INPUT,/MESAP/OUTPUT/rat_sing:/OUTPUT ./mesap_2.2.sif bash -c 'bpipe -n 4 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/test*.gz'
+
+
+## singularity shit
+# need to do --nohome as singularity maps your installs from the computer into the image ... whhich breaks everything R for example (libc errors etc)
+# completely counter intuitive
+# also need to do cd /OUTPUT
+#  *** maybe set user homedir to /OUTPUT for the session
+# maybe leave boot.sh with just a warning message about perms, maybe auto detect docker, and leave as is
+
+### need to declear ENSMAP just in case 
+
+
 #### Current version: 2.0
 
 The MESAP_T package is for NGS transcriptome sequencing (RNA-seq) projects, with the idea of providing an easy to use, reproducible and robust set of standardised methods (and reference files) for analysing this type of data. The two core approaches in MESAP_T are 1) transcript-level alignment and quanitification methods developed by the Salzberg team over many years, published in Nature Protocols in 2016 (http://www.nature.com/nprot/journal/v11/n9/full/nprot.2016.095.html) and 2) gene-level quantification (count) approaches developed by many, published in Nature Protocols in 2013 (http://www.nature.com/nprot/journal/v8/n9/full/nprot.2013.099.html). MESAP_T provides the tools to complete the first 'stage' of any RNA-seq analysis that would typically involve basic QC of the raw data files, alignment to a refernence sequence, quantification at both the transcript and gene level, and post-alignment QC.   Once you have your quantified genes or transcripts, it's then up to you to take forward the next stage of analyses where you would typically preform differential gene expression (or transcript expression) between the experimental groups in your study (as per the study design), followed up by pathway and ontology enrichment analyses and/or gene network analyses. Most of the downstream analyses are conducted in R, and we provide you with R objects and R-compatiable files to readily work with at the end of the MESAP pipeline.

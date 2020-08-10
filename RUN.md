@@ -1,50 +1,16 @@
 # RUN instructions for the MEdical Sequence Analysis Pipeline (MESAP) for RNA-Seq analysis
 The MESAP package has been developed for NGS transcriptome sequencing (RNA-seq) projects with the purpose providing an easy to use, reproducible and robust set of standardised methods (and reference files) for analysing this type of data. More background details are available in [README.md](README.md).
 
-### Reference MESAP version 3.0
+#### Reference MESAP version 3.0
 
+## What pipelines and software are contained in this pipeline?
+There are specific versions of each software tool tied to each MESAP version (eg MESAP 3.0 vs 2.0 vs 1.0). Details of the specific software tool versions can be found in the [README.md](README.md) and the git history of the [Dockerfile](Dockerfile) in the [MESAP git repository](https://github.com/kim-carter/mesap).  
 
+In the current version of MESAP there are 3 simple RNA-seq pipelines (human, mouse and rat), which contain no QC steps in the pipeline to get you a quick answer; and there are 3 piplines that run the full pre- and post-alignment QC process, in addition to the standard alignment->gene and transcript quantification.
 
+When running MESAP, you need to select the appropriate pipeline, either rnaseq_human.groovy/rnaseq_mouse.groovy/rnaseq_rat.groovy OR rnaseq_human_fullqc.groovy/rnaseq_mouse_fullqc.groovy/rnaseq_rat_fullqc.groovy.   Note: if you run the simple pipelines first of all, you can always run the _fullqc version of the pipeline quickly afterwards, as MESAP will detect any already produced files (eg the alignment bam files) and will skill these,
 
-# BUILD
-# docker build -t mesap_dev_2.2 .
-
-# testing
-# docker run -it -v /MESAP/DATA/rat/:/INPUT -v /MESAP/mesap_data/:/mesap_data -v /MESAP/OUTPUT/rat/:/OUTPUT mesap_dev_2.2:latest
-
-# Singularity
-# singularity build mesap_2.2.sif docker-daemon://mesap_dev_2.2:latest
-
-# singularity exec --bind /MESAP/mesap_data:/mesap_data,/MESAP/DATA/rat/:/INPUT,/MESAP/OUTPUT/rat_sing:/OUTPUT ./mesap_2.2.sif bash -c 'bpipe -n 4 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/test*.gz'
-
-
-## singularity shit
-# need to do --nohome as singularity maps your installs from the computer into the image ... whhich breaks everything R for example (libc errors etc)
-# completely counter intuitive
-# also need to do cd /OUTPUT
-#  *** maybe set user homedir to /OUTPUT for the session
-# maybe leave boot.sh with just a warning message about perms, maybe auto detect docker, and leave as is
-
-### need to declear ENSMAP just in case 
-
-
-#### Current version: 2.0
-
-The MESAP_T package is for NGS transcriptome sequencing (RNA-seq) projects, with the idea of providing an easy to use, reproducible and robust set of standardised methods (and reference files) for analysing this type of data. The two core approaches in MESAP_T are 1) transcript-level alignment and quanitification methods developed by the Salzberg team over many years, published in Nature Protocols in 2016 (http://www.nature.com/nprot/journal/v11/n9/full/nprot.2016.095.html) and 2) gene-level quantification (count) approaches developed by many, published in Nature Protocols in 2013 (http://www.nature.com/nprot/journal/v8/n9/full/nprot.2013.099.html). MESAP_T provides the tools to complete the first 'stage' of any RNA-seq analysis that would typically involve basic QC of the raw data files, alignment to a refernence sequence, quantification at both the transcript and gene level, and post-alignment QC.   Once you have your quantified genes or transcripts, it's then up to you to take forward the next stage of analyses where you would typically preform differential gene expression (or transcript expression) between the experimental groups in your study (as per the study design), followed up by pathway and ontology enrichment analyses and/or gene network analyses. Most of the downstream analyses are conducted in R, and we provide you with R objects and R-compatiable files to readily work with at the end of the MESAP pipeline.
-
-## What pipelines and software are contained in this docker image?
-There are specific versions of each software tool tied to each mesap_t version (eg MESAP_T 1.0 vs 1.1 vs 2.0 ). The version details can be found the Dockerfile.versionX located in the git repository - eg [Dockerfile](http://biocentral.ichr.uwa.edu.au:8888/carter/mesap_t/blob/master/Dockerfile.mesap_t.v2.0). For the current version 2.0 release of MESAP_T, the software versions of the HiSAT2 aligner, Stringtie assembler/quantifier and Ballgown R suite are the same as with the 2016 Nature Protocols article described above.
-
-Pipelines and software included in **version 2.0** are:
-- pre-alignment QC using [FastQC 0.11.3] (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-- alignment against human (hg19/grch37 genome build), mouse (mm11), and rat (rn6) genomes, both at the transcript and gene level using [HISAT2 2.0.4] (http://www.ccb.jhu.edu/software/hisat/index.shtml)
-- transcript discovery and quantification (FPKM) of HISAT2 alignments using [Stringtie 1.3.0] (https://ccb.jhu.edu/software/stringtie/) and [Ballgown] (https://github.com/alyssafrazee/ballgown).
-- gene-level quantification (counts) of HISAT2 alignments using SummarizeOverlaps (http://www.rdocumentation.org/packages/GenomicRanges/functions/summarizeOverlaps) (equivalent of HT-seq).
-- post-alignment QC using [Samstat 1.5.2] (http://samstat.sourceforge.net/)
-- plus some sundry scripts/programs to help with merging fastq lanes, and for helping with gencode gene names
-
-MESAP is built around the BPIPE workflow / pipeline technology - currently using version 0.9.9.2 (https://github.com/ssadedin/bpipe/).  For more information in BPIPE itself, you can check out the tutorials and information here: [http://bpipe-test-documentation.readthedocs.org/en/latest/Tutorials/RealPipelineTutorial/] (http://bpipe-test-documentation.readthedocs.org/en/latest/Tutorials/RealPipelineTutorial/).
-
+MESAP also contains separate qC pipelines for each of the major tools, namely pre-alignment QC with Fastqc (run fastqc,groovy); post-alignment QC with Samstat (run samstat,groovy); and QC results (and alignment results if available) aggregation with Multiqc (run multiqc.groovy).  You can run any of these separately from the main pipelines if you wish to obtain specific QC results separately for any reason.
 
 ## What reference / annotation files that the pipelines use?
 We've bundled up all of the necessary genome sequence and annotation files for each of the Human, Mouse and Rat pipelines to ensure that the pipelines and reference data files themselves are repeatable and reproducible.  The descriptions of how the data files were created are detailed elsewhere in the mesap_data git repository, and are summarised below.
@@ -72,6 +38,26 @@ All of your input files should be compressed (gzip'd) before you start - if you 
 ~~~{.bash}
 gzip *.fastq
 ~~~
+
+
+# testing
+# docker run -it -v /MESAP/DATA/rat/:/INPUT -v /MESAP/mesap_data/:/mesap_data -v /MESAP/OUTPUT/rat/:/OUTPUT mesap_dev_2.2:latest
+
+# Singularity
+# singularity build mesap_2.2.sif docker-daemon://mesap_dev_2.2:latest
+
+# singularity exec --bind /MESAP/mesap_data:/mesap_data,/MESAP/DATA/rat/:/INPUT,/MESAP/OUTPUT/rat_sing:/OUTPUT ./mesap_2.2.sif bash -c 'bpipe -n 4 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/test*.gz'
+
+
+## singularity shit
+# need to do --nohome as singularity maps your installs from the computer into the image ... whhich breaks everything R for example (libc errors etc)
+# completely counter intuitive
+# also need to do cd /OUTPUT
+#  *** maybe set user homedir to /OUTPUT for the session
+# maybe leave boot.sh with just a warning message about perms, maybe auto detect docker, and leave as is
+
+### need to declear ENSMAP just in case 
+
 
 
 ## How do I use the pipelines?

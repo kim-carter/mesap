@@ -1,4 +1,10 @@
-# This is the gitlabs homepage for the MEdical Sequence Analysis Pipeline for Transcriptomes (otherwise known as MESAP_T) docker image
+# RUN instructions for the MEdical Sequence Analysis Pipeline (MESAP) for RNA-Seq analysis
+The MESAP package has been developed for NGS transcriptome sequencing (RNA-seq) projects with the purpose providing an easy to use, reproducible and robust set of standardised methods (and reference files) for analysing this type of data. More background details are available in [README.md](README.md).
+
+### Reference MESAP version 3.0
+
+
+
 
 # BUILD
 # docker build -t mesap_dev_2.2 .

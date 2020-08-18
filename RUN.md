@@ -8,21 +8,15 @@ There are specific versions of each software tool tied to each MESAP version (eg
 
 In the current version of MESAP there are 3 simple RNA-seq pipelines (human, mouse and rat), which contain no QC steps in the pipeline to get you a quick answer; and there are 3 piplines that run the full pre- and post-alignment QC process, in addition to the standard alignment->gene and transcript quantification.
 
-When running MESAP, you need to select the appropriate pipeline, either rnaseq_human.groovy/rnaseq_mouse.groovy/rnaseq_rat.groovy OR rnaseq_human_fullqc.groovy/rnaseq_mouse_fullqc.groovy/rnaseq_rat_fullqc.groovy.   Note: if you run the simple pipelines first of all, you can always run the _fullqc version of the pipeline quickly afterwards, as MESAP will detect any already produced files (eg the alignment bam files) and will skill these,
+When running MESAP, you need to select the appropriate pipeline, either **rnaseq_human.groovy / rnaseq_mouse.groovy / rnaseq_rat.groovy** OR **rnaseq_human_fullqc.groovy / rnaseq_mouse_fullqc.groovy / rnaseq_rat_fullqc.groovy**.   Note: if you run the simple pipelines first of all, you can always run the _fullqc version of the pipeline quickly afterwards, as MESAP will detect any already produced files (eg the alignment bam files) and will skill these,
 
-MESAP also contains separate qC pipelines for each of the major tools, namely pre-alignment QC with Fastqc (run fastqc,groovy); post-alignment QC with Samstat (run samstat,groovy); and QC results (and alignment results if available) aggregation with Multiqc (run multiqc.groovy).  You can run any of these separately from the main pipelines if you wish to obtain specific QC results separately for any reason.
+MESAP also contains separate QC pipelines for each of the major tools, namely pre-alignment QC with Fastqc (run fastqc,groovy); post-alignment QC with Samstat (run samstat,groovy); and QC results (and alignment results if available) aggregation with Multiqc (run multiqc.groovy).  You can run any of these separately from the main pipelines if you wish to obtain specific QC results separately for any reason.
 
 ## What reference / annotation files that the pipelines use?
-We've bundled up all of the necessary genome sequence and annotation files for each of the Human, Mouse and Rat pipelines to ensure that the pipelines and reference data files themselves are repeatable and reproducible.  The descriptions of how the data files were created are detailed elsewhere in the mesap_data git repository, and are summarised below.
-
-Reference files included in **version 2.0** are:
-- for the Human pipeline we are using the HG19/GRCH37 genome build from UCSC, along with the Gencode GTF annotation (https://www.gencodegenes.org/releases/) version 19 (to most recent vuild for HG19 available) using level 1 & 2 trancripts only, supplemented with genome annotation from Ensembl 75 (the last HG19 release for Ensembl)
-- for the Mouse pipeline we are using the MM11/GRCm38.p5 genome build from Sanger/Gencode, along with the Gencode GTF annotation (https://www.gencodegenes.org/releases/) version M12 using level 1 & 2 trancripts only, supplemented with genome annotation from Ensembl 87 (the latest release for MM11).
-- for the Rat pipeline we are using the RN6 genome build from Ensembl, along with the Ensembl GTF annotation details from Ensembl 87 (the latest release for RN6).
-
+MESAP comes with the the necessary genome sequence and annotation files for each of the Human, Mouse and Rat pipelines to ensure that the pipelines and reference data files themselves are repeatable and reproducible.  The descriptions of how the data files were created are detailed elsewhere in the mesap_data git repository, in the [mesapdata_build.sh](scripts/mesapdata_build.sh).  **Briefly, the current 3.0 build uses Gencode 34 human (GRCh38), Gencode 25 mouse (GRCm38), and Rat 6.0 from Ensembl version 100, with other identifier mappings also from Ensembl 100**.
 
 ## Before you use the pipelines
-Any input files (we're talking Illumina FASTQ files) need to be in the standard naming format, which AGRF and other providers normally produce for you. Illumina FASTQ files use the following naming scheme:
+Any input files (standard gzipped FASTQ files) need to be in the standard naming format, which AGRF and other providers normally produce for you. Illumina (and other) FASTQ files use the following naming scheme:
 ~~~{.bash}
 <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>.fastq.gz
 ~~~
@@ -32,7 +26,10 @@ NA10831_ATCACG_L002_R1.fastq.gz
 If you have paired-end data, each _R1.fastq.gz file will have a corresponding _R2.fastq.gz file
 If you have single-end data, you just have _R1
 
-Multiple lanes of sequence for a sample will be presented by different Lane numbers (not necessarily consequtive). You can merge multiple lanes (of the same sample) together using the Fastqmerger tool we provide in the MESAP package (described below).
+Multiple lanes of sequence for a sample will be represented by different Lane numbers (not necessarily consequtive). You can merge multiple lanes (of the same sample) together using simply Unix/Linux commands:
+~~~{.bash}
+eg. cat file*.fastq > bigfile.fastq  OR cat file*.fastq.gz > bigfile.fastq.gz 
+~~~
 
 All of your input files should be compressed (gzip'd) before you start - if you have plain .fastq files, you should use the gzip command to compress each one before starting. Eg
 ~~~{.bash}

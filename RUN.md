@@ -1,6 +1,8 @@
 # RUN instructions for the MEdical Sequence Analysis Pipeline (MESAP) for RNA-Seq analysis
 The MESAP package has been developed for NGS transcriptome sequencing (RNA-seq) projects with the purpose providing an easy to use, reproducible and robust set of standardised methods (and reference files) for analysing this type of data. More background details are available in [README.md](README.md).
 
+Following are instructions for using MESAP through the [Singularity](https://github.com/hpcng/singularity/releases) and [Docker](https://www.docker.com) conrainer platforms. Container platform technoologies allow you to create and run operating system-like containers (think of it as a light-weight virtual machine) that package up pieces of software in a way that is portable and reproducible at the OS level. You can build a container on your laptop, and then run it on the largest HPC clusters in the world, local university or company clusters, a single server, in the cloud, or on a workstation down the hall without any changes. This is incredibly powerful, and the perfect choice for building robust and reproducible bioinformatics pipelines.   
+
 #### Reference MESAP version 3.0
 
 ## What pipelines and software are contained in this pipeline?
@@ -12,11 +14,11 @@ When running MESAP, you need to select the appropriate pipeline, either **rnaseq
 
 MESAP also contains separate QC pipelines for each of the major tools, namely pre-alignment QC with Fastqc (run fastqc,groovy); post-alignment QC with Samstat (run samstat,groovy); and QC results (and alignment results if available) aggregation with Multiqc (run multiqc.groovy).  You can run any of these separately from the main pipelines if you wish to obtain specific QC results separately for any reason.
 
-## What reference / annotation files that the pipelines use?
+## What reference / annotation files do the pipelines use?
 MESAP comes with the the necessary genome sequence and annotation files for each of the Human, Mouse and Rat pipelines to ensure that the pipelines and reference data files themselves are repeatable and reproducible.  The descriptions of how the data files were created are detailed elsewhere in the mesap_data git repository, in the [mesapdata_build.sh](scripts/mesapdata_build.sh).  **Briefly, the current 3.0 build uses Gencode 34 human (GRCh38), Gencode 25 mouse (GRCm38), and Rat 6.0 from Ensembl version 100, with other identifier mappings also from Ensembl 100**.
 
-## Before you use the pipelines
-Any input files (standard gzipped FASTQ files) need to be in the standard naming format, which AGRF and other providers normally produce for you. Illumina (and other) FASTQ files use the following naming scheme:
+## Before you use the pipelines, please check the following items
+a) Any input files (standard gzipped FASTQ files) need to be in the standard naming format, which AGRF and other providers normally produce for you. Illumina (and other) FASTQ files use the following naming scheme:
 ~~~{.bash}
 <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>.fastq.gz
 ~~~
@@ -31,11 +33,27 @@ Multiple lanes of sequence for a sample will be represented by different Lane nu
 eg. cat file*.fastq > bigfile.fastq  OR cat file*.fastq.gz > bigfile.fastq.gz 
 ~~~
 
-All of your input files should be compressed (gzip'd) before you start - if you have plain .fastq files, you should use the gzip command to compress each one before starting. Eg
+b) All of your input files should be compressed (gzip'd) before you start - if you have plain .fastq files, you should use the gzip command to compress each one before starting. Eg
 ~~~{.bash}
 gzip *.fastq
 ~~~
 
+c) Before you run anything, you need 5 pieces of information:
+* the "INPUT" directory containing your fastq.gz files. **Note: files should all be in the same directory (not in subdirs)**
+* the "OUTPUT" directory, where all of the results (qc, alignment, quantifications) will be written. **Note: ideally this should be empty.  If you use a directory with existing files, MESAP will check to see if any of the output files from the pipeline have already been created, and will only update/create the missing ones**
+* the location of the "mesap_data" directory, containing all the reference files
+* the name of the pipeline to run - human/mouse/rat and either fullqc or no qc (as noted above)
+* the number of CPU cores to use simultaneously. **Note: while it may be tempting to just put the number of available cores in your laptop, workstation or server, please check that you have sufficient memory (RAM) to support this many core.  The rule of thumb is 6 Gb (6 gigabytes) of RAM per CPU core - ie to use 2 cores on your laptop you need about 12Gb of free memory; to use 20 cores on a server, you need about 120 Gb of free memory.   For disk space, a good rule of thumb is about twice the size of your input directory.**
+
+
+## Running the pipelines using SINGULARITY
+The first set of run instructions for use with the [Singularity](https://github.com/hpcng/singularity/releases). Singularity and Docker are similarly in many ways, but one of the critical differences is permissions, where Singularity runs as a normal user account, while Docker required root (superuser/admin) privileges. As a result, Singularity is appealing for HPC and shared network environments, such as at TKI.
+
+### SINGULARITY @ TKI
+The IT team at TKI are happy to support the use of Singularity for bioinformatics pipelines, and will provide a virtual machine to any user (researcher) with this pre-installed for easy use.
+
+
+### SINGULARITY @ Home / elsewhere
 
 # testing
 # docker run -it -v /MESAP/DATA/rat/:/INPUT -v /MESAP/mesap_data/:/mesap_data -v /MESAP/OUTPUT/rat/:/OUTPUT mesap_dev_2.2:latest

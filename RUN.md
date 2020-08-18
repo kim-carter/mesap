@@ -43,14 +43,79 @@ c) Before you run anything, you need 5 pieces of information:
 * the "OUTPUT" directory, where all of the results (qc, alignment, quantifications) will be written. **Note: ideally this should be empty.  If you use a directory with existing files, MESAP will check to see if any of the output files from the pipeline have already been created, and will only update/create the missing ones**
 * the location of the "mesap_data" directory, containing all the reference files
 * the name of the pipeline to run - human/mouse/rat and either fullqc or no qc (as noted above)
-* the number of CPU cores to use simultaneously. **Note: while it may be tempting to just put the number of available cores in your laptop, workstation or server, please check that you have sufficient memory (RAM) to support this many core.  The rule of thumb is 6 Gb (6 gigabytes) of RAM per CPU core - ie to use 2 cores on your laptop you need about 12Gb of free memory; to use 20 cores on a server, you need about 120 Gb of free memory.   For disk space, a good rule of thumb is about twice the size of your input directory.**
-
+* the maxiumum number of CPU cores to use simultaneously. **Note: while it may be tempting to just put the number of available cores in your laptop, workstation or server, please check that you have sufficient memory (RAM) to support this many core.  The rule of thumb is 6 Gb (6 gigabytes) of RAM per CPU core - ie to use 2 cores on your laptop you need about 12Gb of free memory; to use 20 cores on a server, you need about 120 Gb of free memory.   For disk space, a good rule of thumb is about twice the size of your input directory.**
 
 ## Running the pipelines using SINGULARITY
 The first set of run instructions for use with the [Singularity](https://github.com/hpcng/singularity/releases). Singularity and Docker are similarly in many ways, but one of the critical differences is permissions, where Singularity runs as a normal user account, while Docker required root (superuser/admin) privileges. As a result, Singularity is appealing for HPC and shared network environments, such as at TKI.
 
 ### SINGULARITY @ TKI
-The IT team at TKI are happy to support the use of Singularity for bioinformatics pipelines, and will provide a virtual machine to any user (researcher) with this pre-installed for easy use.
+The IT team at TKI are happy to support the use of Singularity for bioinformatics pipelines, and will provide a virtual machine to any user (researcher) with this pre-installed for easy use.  The mesap_data will be available in /REFERENCE/mesap_3.0 and the singularity binary for mesap (.sif file) will be in /SOFTWARE/mesap_3.0/ - note, wih new versions these paths may change or be updated.
+
+#### 1. Login to your VM server environment
+Login to the server IT has created for you (eg could be tki-hohpc-t2002.ichr.uwa.edu.au) either via command line (SSH), or via GUI (eg RDP/X2GO) as instructed by IT, and open a terminal window.
+
+#### 2. Start a new "screen" session or restart an existing one (optional)
+Screen starts a new terminal (inside your existing one) that is robust to network interruptions.  ie If your internet drops, or you lose your connection to the server for any reason, you can connect back and continue your work as is (or you can just leave long running tasks, and come back and check on them) - very useful of your pipeline takes more than a day to run and you want to take your laptop home.
+~~~{.bash}
+screen
+~~~
+If've you lost connection to the server you can use the -r option with screen to resume your session.  If you have a look at any online tutorials regarding how to use screen, this will give you an idea of the normal practices for working with it
+
+#### 3. Run the pipeline
+The following command should be modified use the 5 bits of information highlighted earlier, specifying the input (MY_INPUT_DIR), output (MY_OUTPUT_DIR) and mesap_data (this one will be in /SOFTWARE for your already) directories that are bind mounted into the container, plus the particular pipeline (PIPELINE.groovy), and finally the maximum number of cores (CPUCORES) to use.  The command line is pretty long and needs to be input as a single command (ie line) - this is unfortunately necessary as there's lots of options that have to be right to enable you to run the entire pipeline in a single command.
+
+Here's what the command line looks like, and where these bits of information go 
+~~~{.bash}
+singularity run --bind /REFERENCE/mesap_3.0:/mesap_data,MY_INPUT_DIR:/INPUT,MY_OUTPUT_DIR:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /SOFTWARE/mesap_3.0/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n CPUCORES -r /mesap/pipelines/PIPELINE.groovy /INPUT/*.gz'
+~~~
+
+Here's what the an actual command line looks like, running the rnaseq_human_fullqc pipeline using 20 cores on an input and output directory located in /SCRATCH.
+~~~{.bash}
+singularity run --bind /REFERENCE/mesap_3.0:/mesap_data,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX:/INPUT,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX_OUTPUT:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /SOFTWARE/mesap_3.0/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n 20 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/*.gz'
+~~~
+
+There will be lots printed to the screen as the pipeline software works through each step of the relevant pipeline.  If there are errors, such as no input files being found, or missing reference / annotation files, then it's likely there's a typo in your run command with the paths that are being mapped to /mesap_data, /INPUT and /OUTPUT - please check are re-run the run command to fix.   If you see an out of memory or disk space error, then you may have to check the specs of your machine and confirm with IT.
+
+If everything is successful, you will see something like the following:
+~~~{.bash}
+======================================== Pipeline Succeeded ========================================
+13:34:37 MSG:  Finished at Fri Aug 14 13:34:37 AWST 2020
+13:34:40 MSG:  Outputs are:
+                /OUTPUT/qc/fastqc_summary.txt
+                /OUTPUT/assembly/MD29_C6GRMANXX_ACAGTGAT_L003_R1.fastq.gtf
+                /OUTPUT/qc/MD29_C6GRMANXX_ACAGTGAT_L003_R1.fastq.bam.samstat.html
+                /OUTPUT//transcript_expression.txt
+                /OUTPUT/assembly/MD28_C6GRMANXX_TGACCAAT_L003_R1.fastq.gtf
+                ... 93 more ...
+~~~
+
+
+
+
+
+
+
+
+
+(where you want stuff saved to).  You will need to substitute these in for yourself depending on where your files are located on the servers.   The following is a long command, and this needs to be run all in a single line.
+~~~{.bash}
+nice -n 20 docker run -it  --volumes-from mesapdata  -v /RAW/yourinputdirectory/:/INPUT   -v /SCRATCH/youroutputdirectory/:/OUTPUT   -e MYUID=`id -u` -e MYGID=`id -g`  biocentral.ichr.uwa.edu.au:4444/mesap_t:2.0
+~~~
+* Replace the /RAW/yourinput directory and /SCRATCH/youroutputdirectory with the full path to your input directory and to your output directory.
+* The version number of mesap_t to use is the last argument at the end of the long command. i.e. **mesap_t:2.0** You can replace 2.0 with 1.1 or 1.0 to use earlier versions of the mesap software (and associated earlier versions of the reference files), or use the word latest to always use the latest version i.e. **mesap_t:latest**
+* <b>One gotcha / safety check before running any BPIPE command is to make sure you are in the /OUTPUT when you run any commands, and that the correct directories are mapped to /OUTPUT and /INPUT</b>. The path is displayed to you in the command prompt each time. When running the MESAP docker container, the only way to save data and output files is via the /OUTPUT (and /INPUT) directory mappings.  If you write any files to a different directory, or make a change to something else - eg saving a file to /tmp, <b>when you exit all changes will be lost and not recoverable</b>.  You are free to explore the /mesap directories and programs, pipellines and scripts, but when you are ready to run a command, always return to /OUTPUT or a subdirectory off of this directory (use the cd command).
+
+#### 4. Run the desired pipeline(s) inside the MESAP container
+The command in (3) puts you into the terminal (shell) of the MESAP container where you can run BPIPE commands to run the various pipelines we've made available in the mesap_t release. In the commands following the <b>-n X</b> option that specifies how many CPU cores to make available for each analysis. In the examples following we use `-n 10` to run 10 simulaneous jobs (as job each uses a single CPU core) at a time until all of your files are processed.  Please use this option judiciously to ensure that you don't consume all of the CPU core (96 total for the SGI; 32 for the NGS server) on the server. Preferably using up to 10 or 20 cores for a large tasks is sufficient for most tasks.  Some tasks require only a few cores to gain a speed up. The other options in the command line (`-v` and `-r`) are recommended for BPIPE and are detailed in the documentation elsewhere.
+
+As noted above, there are multiple pipelines included in the package. Following are descriptions of how to use each of them. MESAP itself is installed in the /mesap directory, with the pipelines and all other files located under this directory.
+
+
+Inside the container you will be placed at a prompt like the following initially:
+~~~{.bash}
+mesap@47f0f914639c:/OUTPUT$
+~~~
+
 
 
 ### SINGULARITY @ Home / elsewhere

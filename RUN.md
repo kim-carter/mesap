@@ -74,9 +74,11 @@ Here's what the an actual command line looks like, running the rnaseq_human_full
 singularity run --bind /REFERENCE/mesap_3.0:/mesap_data,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX:/INPUT,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX_OUTPUT:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /SOFTWARE/mesap_3.0/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n 20 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/*.gz'
 ~~~
 
-There will be lots printed to the screen as the pipeline software works through each step of the relevant pipeline.  If there are errors, such as no input files being found, or missing reference / annotation files, then it's likely there's a typo in your run command with the paths that are being mapped to /mesap_data, /INPUT and /OUTPUT - please check are re-run the run command to fix.   If you see an out of memory or disk space error, then you may have to check the specs of your machine and confirm with IT.
+There will be lots printed to the screen as the pipeline software works through each step of the relevant pipeline.  
+* If there are errors, such as no input files being found, or missing reference / annotation files, then it's likely there's a typo in your run command with the paths that are being mapped to /mesap_data, /INPUT and /OUTPUT - please check are re-run the run command to fix.
+* If you see an out of memory or disk space error, then you may have to check the specs of your machine and confirm with IT.
+* If everything is successful, you will see something like the following:
 
-If everything is successful, you will see something like the following:
 ~~~{.bash}
 ======================================== Pipeline Succeeded ========================================
 13:34:37 MSG:  Finished at Fri Aug 14 13:34:37 AWST 2020
@@ -89,7 +91,32 @@ If everything is successful, you will see something like the following:
                 ... 93 more ...
 ~~~
 
+### SINGULARITY @ Home / elsewhere    
+As long as you have singularity installed, you can run the MESAP pipeline on pretty much any computer, provided you have the MESAP binary file and corresponding mesap_data data directory. You can copy these from the /SOFTWARE/mesap_3.0 and /REFERENCE/mesap_3.0 directories at TKI.
 
+As with the previous set of instructions, you still need the same 5 bits of information highlighted earlier, specifying the input (MY_INPUT_DIR), output (MY_OUTPUT_DIR) and mesap_data directories that are bind mounted into the container, plus the particular pipeline (PIPELINE.groovy), and finally the maximum number of cores (CPUCORES) to use. In this case however, the two changes from the previous instructions are the locations of the mesap_data directory and the mesap_3.0 sif binary, which will be in the directory 
+
+Here's what the command line looks like, and where these bits of information go 
+~~~{.bash}
+singularity run --bind /REFERENCE/mesap_3.0:/mesap_data,MY_INPUT_DIR:/INPUT,MY_OUTPUT_DIR:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /SOFTWARE/mesap_3.0/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n CPUCORES -r /mesap/pipelines/PIPELINE.groovy /INPUT/*.gz'
+~~~
+
+Here's what the an actual command line looks like, running the rnaseq_human_fullqc pipeline using 20 cores on an input and output directory located in /SCRATCH.
+~~~{.bash}
+singularity run --bind /REFERENCE/mesap_3.0:/mesap_data,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX:/INPUT,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX_OUTPUT:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /SOFTWARE/mesap_3.0/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n 20 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/*.gz'
+~~~
+
+
+
+
+
+
+The IT team at TKI are happy to support the use of Singularity for bioinformatics pipelines, and will provide a virtual machine to any user (researcher) with this pre-installed for easy use.  The mesap_data will be available in /REFERENCE/mesap_3.0 and the singularity binary for mesap (.sif file) will be in /SOFTWARE/mesap_3.0/ - note, wih new versions these paths may change or be updated.
+
+#### 1. Login to your VM server environment
+Login to the server IT has created for you (eg could be tki-hohpc-t2002.ichr.uwa.edu.au) either via command line (SSH), or via GUI (eg RDP/X2GO) as instructed by IT, and open a terminal window.
+
+#### 2. Start a new "screen" session or restart an existing one (optional)
 
 
 

@@ -94,55 +94,16 @@ There will be lots printed to the screen as the pipeline software works through 
 ### SINGULARITY @ Home / elsewhere    
 As long as you have singularity installed, you can run the MESAP pipeline on pretty much any computer, provided you have the MESAP binary file and corresponding mesap_data data directory. You can copy these from the /SOFTWARE/mesap_3.0 and /REFERENCE/mesap_3.0 directories at TKI.
 
-As with the previous set of instructions, you still need the same 5 bits of information highlighted earlier, specifying the input (MY_INPUT_DIR), output (MY_OUTPUT_DIR) and mesap_data directories that are bind mounted into the container, plus the particular pipeline (PIPELINE.groovy), and finally the maximum number of cores (CPUCORES) to use. In this case however, the two changes from the previous instructions are the locations of the mesap_data directory and the mesap_3.0 sif binary, which will be in the directory 
+As with the previous set of instructions, you still need the same 5 bits of information highlighted earlier, specifying the input (MY_INPUT_DIR), output (MY_OUTPUT_DIR) and mesap_data directories that are bind mounted into the container, plus the particular pipeline (PIPELINE.groovy), and finally the maximum number of cores (CPUCORES) to use. In this case however, the two changes from the previous instructions are the locations of the mesap_data directory and the mesap_3.0 sif binary. The following example assumes the files are accessible in the users home directory (eg /home/user):
 
-Here's what the command line looks like, and where these bits of information go 
 ~~~{.bash}
-singularity run --bind /REFERENCE/mesap_3.0:/mesap_data,MY_INPUT_DIR:/INPUT,MY_OUTPUT_DIR:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /SOFTWARE/mesap_3.0/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n CPUCORES -r /mesap/pipelines/PIPELINE.groovy /INPUT/*.gz'
+singularity run --bind /home/user/mesap_data:/mesap_data,MY_INPUT_DIR:/INPUT,MY_OUTPUT_DIR:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /home/user/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n CPUCORES -r /mesap/pipelines/PIPELINE.groovy /INPUT/*.gz'
 ~~~
 
-Here's what the an actual command line looks like, running the rnaseq_human_fullqc pipeline using 20 cores on an input and output directory located in /SCRATCH.
-~~~{.bash}
-singularity run --bind /REFERENCE/mesap_3.0:/mesap_data,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX:/INPUT,/SCRATCH/AGRF_CAGRF20031852_HLLMYDRXX_OUTPUT:/OUTPUT -H /run/user/`id -u`:/home/`id -un`  /SOFTWARE/mesap_3.0/mesap_3.0.sif bash -c 'cd /OUTPUT/ && bpipe run -n 20 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/*.gz'
-~~~
+## What output files are created?
 
-
-
-
-
-
-The IT team at TKI are happy to support the use of Singularity for bioinformatics pipelines, and will provide a virtual machine to any user (researcher) with this pre-installed for easy use.  The mesap_data will be available in /REFERENCE/mesap_3.0 and the singularity binary for mesap (.sif file) will be in /SOFTWARE/mesap_3.0/ - note, wih new versions these paths may change or be updated.
-
-#### 1. Login to your VM server environment
-Login to the server IT has created for you (eg could be tki-hohpc-t2002.ichr.uwa.edu.au) either via command line (SSH), or via GUI (eg RDP/X2GO) as instructed by IT, and open a terminal window.
-
-#### 2. Start a new "screen" session or restart an existing one (optional)
-
-
-
-
-
-
-
-(where you want stuff saved to).  You will need to substitute these in for yourself depending on where your files are located on the servers.   The following is a long command, and this needs to be run all in a single line.
-~~~{.bash}
-nice -n 20 docker run -it  --volumes-from mesapdata  -v /RAW/yourinputdirectory/:/INPUT   -v /SCRATCH/youroutputdirectory/:/OUTPUT   -e MYUID=`id -u` -e MYGID=`id -g`  biocentral.ichr.uwa.edu.au:4444/mesap_t:2.0
-~~~
-* Replace the /RAW/yourinput directory and /SCRATCH/youroutputdirectory with the full path to your input directory and to your output directory.
-* The version number of mesap_t to use is the last argument at the end of the long command. i.e. **mesap_t:2.0** You can replace 2.0 with 1.1 or 1.0 to use earlier versions of the mesap software (and associated earlier versions of the reference files), or use the word latest to always use the latest version i.e. **mesap_t:latest**
-* <b>One gotcha / safety check before running any BPIPE command is to make sure you are in the /OUTPUT when you run any commands, and that the correct directories are mapped to /OUTPUT and /INPUT</b>. The path is displayed to you in the command prompt each time. When running the MESAP docker container, the only way to save data and output files is via the /OUTPUT (and /INPUT) directory mappings.  If you write any files to a different directory, or make a change to something else - eg saving a file to /tmp, <b>when you exit all changes will be lost and not recoverable</b>.  You are free to explore the /mesap directories and programs, pipellines and scripts, but when you are ready to run a command, always return to /OUTPUT or a subdirectory off of this directory (use the cd command).
-
-#### 4. Run the desired pipeline(s) inside the MESAP container
-The command in (3) puts you into the terminal (shell) of the MESAP container where you can run BPIPE commands to run the various pipelines we've made available in the mesap_t release. In the commands following the <b>-n X</b> option that specifies how many CPU cores to make available for each analysis. In the examples following we use `-n 10` to run 10 simulaneous jobs (as job each uses a single CPU core) at a time until all of your files are processed.  Please use this option judiciously to ensure that you don't consume all of the CPU core (96 total for the SGI; 32 for the NGS server) on the server. Preferably using up to 10 or 20 cores for a large tasks is sufficient for most tasks.  Some tasks require only a few cores to gain a speed up. The other options in the command line (`-v` and `-r`) are recommended for BPIPE and are detailed in the documentation elsewhere.
-
-As noted above, there are multiple pipelines included in the package. Following are descriptions of how to use each of them. MESAP itself is installed in the /mesap directory, with the pipelines and all other files located under this directory.
-
-
-Inside the container you will be placed at a prompt like the following initially:
-~~~{.bash}
-mesap@47f0f914639c:/OUTPUT$
-~~~
-
+### pre-alignment and post-alignment QC
+If you have opted to 
 
 
 ### SINGULARITY @ Home / elsewhere

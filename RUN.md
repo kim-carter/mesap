@@ -103,7 +103,10 @@ singularity run --bind /home/user/mesap_data:/mesap_data,MY_INPUT_DIR:/INPUT,MY_
 ## What output files are created?
 
 ### pre-alignment and post-alignment QC
-If you have opted to 
+If you have opted to run the *fullqc* versions of the human, mouse and rat pipelines (or the separate QC pipelines), in the **qc/** folder off of your OUTPUT directory will be the following:
+* for each input fastq file (or pair of files) there will be a corresponding _fastqc.html file and _fastqc.zip from FastQC (pre-alignment)
+* for each aligned bam file there will be a corresponding _samstat.html file from SamStat (post-alignment)
+* 
 
 
 ### SINGULARITY @ Home / elsewhere

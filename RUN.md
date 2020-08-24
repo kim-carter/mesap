@@ -106,11 +106,15 @@ singularity run --bind /home/user/mesap_data:/mesap_data,MY_INPUT_DIR:/INPUT,MY_
 If you have opted to run the *fullqc* versions of the human, mouse and rat pipelines (or the separate QC pipelines), in the **qc/** folder off of your OUTPUT directory will be the following:
 * for each input fastq file (or pair of files) there will be a corresponding _fastqc.html file and _fastqc.zip from FastQC (pre-alignment)
 * for each aligned bam file there will be a corresponding _samstat.html file from SamStat (post-alignment)
-* 
+* fastqc_summary.txt, a brief text file summary of all of the fastqc results in this folder
+* samstat_summary.txt, a brief text file summary of all of the fastqc results in this folder
+* samstat_results_summary.csv, a detailed delimited text file summary of the fastqc results
+* multiqc_report.html (and multiqc_data folder), a detailed graphical html summary report covering both the fastqc and hisat alignment results
 
+### 
 
 ### SINGULARITY @ Home / elsewhere
-
+dat
 # testing
 # docker run -it -v /MESAP/DATA/rat/:/INPUT -v /MESAP/mesap_data/:/mesap_data -v /MESAP/OUTPUT/rat/:/OUTPUT mesap_dev_2.2:latest
 

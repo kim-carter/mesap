@@ -104,18 +104,18 @@ singularity run --bind /home/user/mesap_data:/mesap_data,MY_INPUT_DIR:/INPUT,MY_
 
 ### key output files
 In your OUTPUT folder will be the following:
-* genecounts.txt, a tab delimited text file of the (raw) read counts for each input file, with gencode, ensembl, gene symbol and entrezid identifiers and gene description  
-* transcript_expression.txt, a tab delimited text file of the normalised expression values (tpm and fpkm) for each input file, with ensembl transcript identifiers
-
+* *genecounts.txt*, a tab delimited text file of the (raw) read counts for each input file, with gencode, ensembl, gene symbol and entrezid identifiers and gene description  
+* *transcript_expression.txt*, a tab delimited text file of the normalised expression values (tpm and fpkm) for each input file, with ensembl transcript identifiers
+* *bg.rda*, a rdata object from the ballgown biocondunctor package, which can be further used to perform isoform-level differential expression analysis of the input files
 
 ### pre-alignment and post-alignment QC
 If you have opted to run the *fullqc* versions of the human, mouse and rat pipelines (or the separate QC pipelines), in the **qc/** folder off of your OUTPUT directory will be the following:
 * for each input fastq file (or pair of files) there will be a corresponding _fastqc.html file and _fastqc.zip from FastQC (pre-alignment)
 * for each aligned bam file there will be a corresponding _samstat.html file from SamStat (post-alignment)
-* fastqc_summary.txt, a brief text file summary of all of the fastqc results in this folder
-* samstat_summary.txt, a brief text file summary of all of the fastqc results in this folder
-* samstat_results_summary.csv, a detailed delimited text file summary of the fastqc results
-* multiqc_report.html (and multiqc_data folder), a detailed graphical html summary report covering both the fastqc and hisat alignment results
+* *fastqc_summary.txt*, a brief text file summary of all of the fastqc results in this folder
+* *samstat_summary.txt*, a brief text file summary of all of the fastqc results in this folder
+* *samstat_results_summary.csv*, a detailed delimited text file summary of the fastqc results
+* *multiqc_report.html* (and multiqc_data folder), a detailed graphical html summary report covering both the fastqc and hisat alignment results
 
 ### alignments 
 In the **alignments/** folder off of your OUTPUT directory will be the following:
@@ -129,7 +129,7 @@ In the **merged_asm/** folder off of your OUTPUT directory will be the following
 * a merged assembly gtf file containing alignments to both the known species reference GTF and any potential novel transcripts
 
 ### debugging, logging and other outputs for reproducibility
-In the **.bpipe/** folder off of your OUTPUT directory - check bpipe.log for debugging.  commandlog.txt in your OUTPUT folder contains all of the commands (and options) that have been run
+In the **.bpipe/** folder off of your OUTPUT directory - check *bpipe.log* for debugging.  *commandlog.txt* in your OUTPUT folder contains all of the commands (and options) that have been run
 
 
     

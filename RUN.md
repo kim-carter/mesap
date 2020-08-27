@@ -102,6 +102,12 @@ singularity run --bind /home/user/mesap_data:/mesap_data,MY_INPUT_DIR:/INPUT,MY_
 
 ## What output files are created?
 
+### key output files
+In your OUTPUT folder will be the following:
+* genecounts.txt, a tab delimited text file of the (raw) read counts for each input file, with gencode, ensembl, gene symbol and entrezid identifiers and gene description  
+* transcript_expression.txt, a tab delimited text file of the normalised expression values (tpm and fpkm) for each input file, with ensembl transcript identifiers
+
+
 ### pre-alignment and post-alignment QC
 If you have opted to run the *fullqc* versions of the human, mouse and rat pipelines (or the separate QC pipelines), in the **qc/** folder off of your OUTPUT directory will be the following:
 * for each input fastq file (or pair of files) there will be a corresponding _fastqc.html file and _fastqc.zip from FastQC (pre-alignment)
@@ -111,7 +117,22 @@ If you have opted to run the *fullqc* versions of the human, mouse and rat pipel
 * samstat_results_summary.csv, a detailed delimited text file summary of the fastqc results
 * multiqc_report.html (and multiqc_data folder), a detailed graphical html summary report covering both the fastqc and hisat alignment results
 
-### 
+### alignments 
+In the **alignments/** folder off of your OUTPUT directory will be the following:
+* for each input fastq file (or pair of files) there will be a corresponding bam file (post-alignment summary and qc for each is in the qc/ outputs)
+* for each input fastq file (or pair of files) there will be a (merged) .gtf and coverage cov_refs.gtf (these are temporary files, which are summarised elsewhere)
+
+### assembly 
+In the **assembly/** folder off of your OUTPUT directory will be the following:
+* for each input fastq file (or pair of files) there will be a first pass .gtf with coverage and expression (these are temporary files, which are summarised elsewhere)
+In the **merged_asm/** folder off of your OUTPUT directory will be the following:
+* a merged assembly gtf file containing alignments to both the known species reference GTF and any potential novel transcripts
+
+### debugging, logging and other outputs for reproducibility
+In the **.bpipe/** folder off of your OUTPUT directory - check bpipe.log for debugging.  commandlog.txt in your OUTPUT folder contains all of the commands (and options) that have been run
+
+
+    
 
 ### SINGULARITY @ Home / elsewhere
 dat

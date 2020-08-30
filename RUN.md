@@ -131,7 +131,24 @@ In the **merged_asm/** folder off of your OUTPUT directory will be the following
 ### debugging, logging and other outputs for reproducibility
 In the **.bpipe/** folder off of your OUTPUT directory - check *bpipe.log* for debugging.  *commandlog.txt* in your OUTPUT folder contains all of the commands (and options) that have been run
 
+## Running the pipelines using DOCKER
+Following are instructions for using MESAP with [Docker](https://docker.com).  While Docker normally requires root (superuser/admin) privileges, the mesap container has been built to restrict this as much as possible, such that you are required to map your own user & group privileges as part of how the pipelines run (details following). 
 
+### Check you have built the MESAP DOCKER image
+For whatever laptop/deskop/workstation or server you are running on, you need to have Docker installed and runnning, and have grabbed the MESAP git repository and built the image - see [BUILD.md](BUILD.md) for detailed instructions.
+
+
+Login to the server IT has created for you (eg could be tki-hohpc-t2002.ichr.uwa.edu.au) either via command line (SSH), or via GUI (eg RDP/X2GO) as instructed by IT, and open a terminal window.
+
+#### 2. Start a new "screen" session or restart an existing one (optional)  
+Screen starts a new terminal (inside your existing one) that is robust to network interruptions.  ie If your internet drops, or you lose your connection to the server for any reason, you can connect back and continue your work as is (or you can just leave long running tasks, and come back and check on them) - very useful of your pipeline takes more than a day to run and you want to take your laptop home.
+~~~{.bash}
+screen
+~~~
+If've you lost connection to the server you can use the -r option with screen to resume your session.  If you have a look at any online tutorials regarding how to use screen, this will give you an idea of the normal practices for working with it
+
+#### 3. Run the pipeline
+The following command should be modified use the 5 bits of information highlighted earlier, specifying the input (MY_INPUT_DIR), output (MY_OUTPUT_DIR) and 
     
 
 ### SINGULARITY @ Home / elsewhere

@@ -131,172 +131,18 @@ In the **merged_asm/** folder off of your OUTPUT directory will be the following
 ### debugging, logging and other outputs for reproducibility
 In the **.bpipe/** folder off of your OUTPUT directory - check *bpipe.log* for debugging.  *commandlog.txt* in your OUTPUT folder contains all of the commands (and options) that have been run
 
+
 ## Running the pipelines using DOCKER
 Following are instructions for using MESAP with [Docker](https://docker.com).  While Docker normally requires root (superuser/admin) privileges, the mesap container has been built to restrict this as much as possible, such that you are required to map your own user & group privileges as part of how the pipelines run (details following). 
 
 ### Check you have built the MESAP DOCKER image
 For whatever laptop/deskop/workstation or server you are running on, you need to have Docker installed and runnning, and have grabbed the MESAP git repository and built the image - see [BUILD.md](BUILD.md) for detailed instructions.
 
-
-Login to the server IT has created for you (eg could be tki-hohpc-t2002.ichr.uwa.edu.au) either via command line (SSH), or via GUI (eg RDP/X2GO) as instructed by IT, and open a terminal window.
-
-#### 2. Start a new "screen" session or restart an existing one (optional)  
-Screen starts a new terminal (inside your existing one) that is robust to network interruptions.  ie If your internet drops, or you lose your connection to the server for any reason, you can connect back and continue your work as is (or you can just leave long running tasks, and come back and check on them) - very useful of your pipeline takes more than a day to run and you want to take your laptop home.
-~~~{.bash}
-screen
-~~~
-If've you lost connection to the server you can use the -r option with screen to resume your session.  If you have a look at any online tutorials regarding how to use screen, this will give you an idea of the normal practices for working with it
-
-#### 3. Run the pipeline
-The following command should be modified use the 5 bits of information highlighted earlier, specifying the input (MY_INPUT_DIR), output (MY_OUTPUT_DIR) and 
-    
-
-### SINGULARITY @ Home / elsewhere
-dat
-# testing
-# docker run -it -v /MESAP/DATA/rat/:/INPUT -v /MESAP/mesap_data/:/mesap_data -v /MESAP/OUTPUT/rat/:/OUTPUT mesap_dev_2.2:latest
-
-# Singularity
-# singularity build mesap_2.2.sif docker-daemon://mesap_dev_2.2:latest
-
-# singularity exec --bind /MESAP/mesap_data:/mesap_data,/MESAP/DATA/rat/:/INPUT,/MESAP/OUTPUT/rat_sing:/OUTPUT ./mesap_2.2.sif bash -c 'bpipe -n 4 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/test*.gz'
-
-
-## singularity shit
-# need to do --nohome as singularity maps your installs from the computer into the image ... whhich breaks everything R for example (libc errors etc)
-# completely counter intuitive
-# also need to do cd /OUTPUT
-#  *** maybe set user homedir to /OUTPUT for the session
-# maybe leave boot.sh with just a warning message about perms, maybe auto detect docker, and leave as is
-
-### need to declear ENSMAP just in case 
-
-
-
-## How do I use the pipelines?
-
-#### 1. Login to the bioinformatics environment
-Login to the SGI server (tki-lc1.ichr.uwa.edu.au) or the NGS server (hobiongs.ichr.uwa.edu.au) either via command line, or via GUI (X2GO) and open a terminal window, as per the instructions you were sent when getting access to the platform.
-
-#### 2. Start a new "screen" session or restart an existing one (optional)
-Screen starts a new terminal (inside your existing one) that is robust to network interruptions.  ie If your internet drops, or you lose your connection to the server for any reason, you can connect back and continue your work as is (or you can just leave long running tasks, and come back and check on them).
-~~~{.bash}
-screen
-~~~
-If've you lost connection to the server you can use the -r option with screen to resume your session.  If you have a look at any online tutorials regarding how to use screen, this will give you an idea of the normal practices for working with it
-
-#### 3. Start the mesap_t docker container, selecting a specific mesap_t version or use the default latest.
-
-The following command runs the MESAP transcriptome docker container (mesap_t), specifying an INPUT directory (the directory where your fastq.gz files are stored) and OUTPUT directory (where you want stuff saved to).  You will need to substitute these in for yourself depending on where your files are located on the servers.   The following is a long command, and this needs to be run all in a single line.
-~~~{.bash}
-nice -n 20 docker run -it  --volumes-from mesapdata  -v /RAW/yourinputdirectory/:/INPUT   -v /SCRATCH/youroutputdirectory/:/OUTPUT   -e MYUID=`id -u` -e MYGID=`id -g`  biocentral.ichr.uwa.edu.au:4444/mesap_t:2.0
-~~~
-* Replace the /RAW/yourinput directory and /SCRATCH/youroutputdirectory with the full path to your input directory and to your output directory.
-* The version number of mesap_t to use is the last argument at the end of the long command. i.e. **mesap_t:2.0** You can replace 2.0 with 1.1 or 1.0 to use earlier versions of the mesap software (and associated earlier versions of the reference files), or use the word latest to always use the latest version i.e. **mesap_t:latest**
-* <b>One gotcha / safety check before running any BPIPE command is to make sure you are in the /OUTPUT when you run any commands, and that the correct directories are mapped to /OUTPUT and /INPUT</b>. The path is displayed to you in the command prompt each time. When running the MESAP docker container, the only way to save data and output files is via the /OUTPUT (and /INPUT) directory mappings.  If you write any files to a different directory, or make a change to something else - eg saving a file to /tmp, <b>when you exit all changes will be lost and not recoverable</b>.  You are free to explore the /mesap directories and programs, pipellines and scripts, but when you are ready to run a command, always return to /OUTPUT or a subdirectory off of this directory (use the cd command).
-
-#### 4. Run the desired pipeline(s) inside the MESAP container
-The command in (3) puts you into the terminal (shell) of the MESAP container where you can run BPIPE commands to run the various pipelines we've made available in the mesap_t release. In the commands following the <b>-n X</b> option that specifies how many CPU cores to make available for each analysis. In the examples following we use `-n 10` to run 10 simulaneous jobs (as job each uses a single CPU core) at a time until all of your files are processed.  Please use this option judiciously to ensure that you don't consume all of the CPU core (96 total for the SGI; 32 for the NGS server) on the server. Preferably using up to 10 or 20 cores for a large tasks is sufficient for most tasks.  Some tasks require only a few cores to gain a speed up. The other options in the command line (`-v` and `-r`) are recommended for BPIPE and are detailed in the documentation elsewhere.
-
-As noted above, there are multiple pipelines included in the package. Following are descriptions of how to use each of them. MESAP itself is installed in the /mesap directory, with the pipelines and all other files located under this directory.
-
-
-Inside the container you will be placed at a prompt like the following initially:
-~~~{.bash}
-mesap@47f0f914639c:/OUTPUT$
-~~~
-
-###### Pre-alignment QC
-To run the pre-aligment QC software, FastQC (/mesap/pipelines/fastqc.groovy), you would do something like the following:
-~~~{.bash}
-mesap@server:/OUTPUT$     bpipe run -r -v -n 10 /mesap/pipelines/fastqc.groovy /INPUT/*.fastq.gz
-~~~
-This will run the fastqc pipeline with any fastq files in your /INPUT directory, with the output written into the /OUTPUT directory (in this case into a `qc` subdirectory). In the qc subdirectory you will find a .html file for each input .fastq.gz file containing the summary of QC information, which you can open in a browser. The full FastQC output for each input file is also containined in a .zip file, named similarly to the input file. MESAP_T also produces a quick summary file of across all of the input files, summarising how many files passed each QC measure - `fastqc_summary.txt`.
-
-###### Alignment, denovo transcriptome assembly and gene & transcript-level quantification
-To run the Human (/mesap/pipelines/StringTieDeNovoHUMAN.groovy), Mouse (/mesap/pipelines/StringTieDeNovoMOUSE).groovy), or RAT (/mesap/pipelines/StringTieDeNovoRAT.groovy), you would typically do something like the following (usually after doing QC above) (human example):
+### Run the pipeline in DOCKER
+The following command should be modified use the 5 bits of information highlighted earlier, specifying the input (MY_INPUT_DIR), output (MY_OUTPUT_DIR) and mesap_data directories, the number of cores (-n 4), and the pipeline (rnaseq_human_fullqc.groovy). 
 
 ~~~{.bash}
-mesap@server:/OUTPUT$     bpipe run -r -v -n 10 /mesap/pipelines/StringTieDeNovoHUMAN.groovy /INPUT/*.fastq.gz
-~~~~
-This will run through the full HISAT->STRINGTIE->BALLGOWN doing novel transcript assembly and known transcript annotation, and will produce a Ballgown R object (`bg.rda`) ready to use for downstream analysis - just run R, load the ballgown library (`library(ballgown)`), and load the R data object (`load(bg.rda)`). The output will be written to a various subdirectories (eg assembly alignments etc).
-
-This pipeline will also automatically produce a `genecounts.txt` file, using the HISAT alignments and SummarizeOverlaps, with some extra Ensembl annotation (gene name, symbol) added.  We strongly recommend you have a look at the /mesap/scripts/gene_counts.R file to check the strandedness of your sequencing to ensure the counts are calculated correctly (example code is provided here to check). Please see the notes below about extra considerations around Gencode annotations, PAR regions, ID mapping (eg to Entrez IDs) and so on.
-
-###### Post-alignment QC
-Once the alignments and quantification are run, you could check the alignment quality by running Samstat on the output .bam files. For example:
-~~~{.bash}
-mesap@server:/OUTPUT$   bpipe run -r -v -n 10 /mesap/pipelines/samstat.groovy alignments/*.bam
-~~~
-This will run the samstat pipeline with any bam files in your /OUTPUT/alignments directory (the default location), with the output written into the `qc` subdirectory (as with fastqc). In the qc subdirectory you will find a .samstat.html file for each .bam file file containing the summary of alignment QC information, which you can open in a browser. MESAP_T also produces a quick summary file of across all of the input files, summarising average percentages of mapping quality - `samstat_summary.txt`.
-
-#### 5. Throughout the process BPIPE logs every command you've run (saved into the /OUTPUT directory, or wherever you launch bpipe from), and provides the ability to resume a pipeline if there was an error at any stage.
-You can examine logs using something like the following:
-~~~{.bash}
-mesap@server:/OUTPUT$   bpipe log
+# docker run -it -e MYUID=`id -u` -e MYGID=`id -g` -v /home/user/MY_INPUT_DIR:/INPUT -v /home/user/mesap_data/:/mesap_data -v /home/user/MY_OUTPUT_DIR/:/OUTPUT mesap:3.0 bash -c 'bpipe -n 4 -r /mesap/pipelines/rnaseq_human_fullqc.groovy /INPUT/test*.gz'
 ~~~
 
-#### 6. Exit MESAP
-When you're finished running things inside the MESAP docker container, simply type "exit" to return to your normal shell on the server.   Just remember that anything that's not saved to the /OUTPUT directory will not be there when you run the MESAP next time (ie for another project or set of input files).    The idea is that you should run the MESAP pipelines on each project separately, as you can only map one input and output directory to a session - this also helps to keep output files, bpipe logs etc separate per project.
-
-
-
-## Other important and useful information
-MESAP_T is really the first stage or phase of RNA-seq analysis, it's certainly not the endpoint.  Once you have your quantified transcripts or gene counts, you need to perform differential expression analysis fitting the design of your study (typically done in R via Limma and possibly EdgeR/Voom or directly in Ballgown in R), then follow it up with pathway enrichment, ontology enrichment and/or network analysis and so on. All of these steps may likely require biostatistical and bioinformatics expertise, and we strongly recommend you consult/involve an expert in this type of analysis right from the design stage.
-
-#### Gencode IDs and pseudoautosomal regions (PAR)  (Human and Mouse pipelines)
-For both the Human and Mouse pipelines, we use [Gencode] (https://www.gencodegenes.org/) project annotations, as the most quality reference standard annotation available for both species (there is no Gencode RAT project currently).
-
-In the `genecounts.txt` gene counts file for the Human and Mouse pipelines, you may well find that there are duplicate gene names or symbols in some of the annotation columns. This is not an issue relating to the MESAP, this is in relation to the genome annotation differences and conventions between datasources. The first column in your genecounts file is `gencodeid` - this is a unique Gencode identifier, which is mostly unique Ensembl gene IDs.
-
-Ensembl ids, by convention, are made of a species index ("ENS" for human and "ENSMUS" for mouse etc) followed by a feature type indicator ("G" for gene, "T" for transcript, "E" for exon, "P" for translation) and an 11-number figure.
-
-The Gencode GTF/GFF3 files make an exception to this rule in the case of the so called **pseudoautosomal regions (PAR)** of chromosome Y. The gene annotation in these regions is identical between chromosomes X and Y. Ensembl do not provide different feature ids for both chromosomes. The Ensembl GTF file only includes this annotation once, for chromosome X. However, Gencode decided that the GENCODE GTF/GFF3 files would include the annotation in the PAR regions of both chromosomes. Since the GTF convention dictates that feature ids have to be unique for different genome regions, Gencode slightly modify the Ensembl feature id by replacing the first zero with an "R". Thus, "ENSG00000182378.10" in chromosome X becomes "ENSGR0000182378.10" in chromosome Y.
-
-Here's an example:
-~~~{.bash}
-tki-lc1:> grep ENSG00000002586 genecounts.txt
-gencodeid            sample1  sample2  EnsemblID        Symbol  Description
-ENSG00000002586.13   1011     989      ENSG00000002586  CD99    CD99 molecule [Source:HGNC Symbol;Acc:7082]
-ENSGR0000002586.13   1011     1002     ENSG00000002586  CD999   CD99 molecule [Source:HGNC Symbol;Acc:7082]
-~~~
-The first one represents the X chromosome counts, and second "R" one represents the Y chromosome counts.
-
-The extra columns (EnsemblID, Symbol & Description) added to the genecounts file as part of mesap are directly from Ensembl annotation, which don't use the X&Y notation that Gencode use (as described above).  They similarly don't use the transcript number notation ie geneID.transcriptnumber such as ENSG00000002586.13.   The ID column created is just the Gene ID and description and name - therefore there will/may be a few duplicates for these specific X & Y regions.
-
-If you were just interested in autosomes, then the duplication isn't an issue either way.  Otherwise, you can use the first ID column instead to get a unique ID.
-
-You will also see that MESAP also produces a `genecounts.txt.missing` file for you - this flags any Ensembl identifiers that could not be located in the additional annotation informatics for the given reference files (basically this is an extra sanity check to make sure that consisent reference annotations are used throughout the pipeline) - this file should be empty.
-
-#### Entrez IDs and mapping other identifiers
-When using taking gene level outputs from MESAP and converting to other platforms, please be aware that there isn't always a 1-to-1 mapping of identifiers. Throughout MESAP we've standardised around Ensembl (plus Gencode) for annotations and nomenclature (please also see above note regarding the missing identifier checks that MESAP does for you).
-
-If you want to take the genecounts.txt output and map to Entrez IDs for example, please remember that Entrez Ids are build from the NCBI/Genbank based genome builds and annotation projects, which are not 100% identical to the Ensembl based efforts. There are no quickfixes, and there are multi-mapping of gene identifiers whether you are starting from the NCBI or Ensembl builds - there are no 100% complete reproducible, version controlled mappings of indentifiers. The best we can do is recommend an approach something like the following (example is for human data):
-
-~~~{r}
-# load annotation libraries
-library(AnnotationDbi)
-library(org.Hs.eg.db)
-
-# read gene counts file
-data <- read.csv("genecounts.txt",sep="\t",stringsAsFactors=F)
-
-# map org.HS to our data using gene symbol (for example)
-Annotation <- select(org.Hs.eg.db, keys = as.character(data$Symbol), columns = c("ENTREZID", "GENENAME"), keytype = "SYMBOL")
-
-# the Annotation data frame can now by merged in with our original data
-~~~
-
-#### How do I build the docker image from scratch (eg onto my own computer)? Note: this step isn't normally required
-
-1. Sync the mesap_t docker repository using git (or download the .zip file)  (note this will only work inside the TKI network)
-~~~{.bash}
-git pull http://biocentral.ichr.uwa.edu.au:8888/carter/mesap_t.git
-~~~
-
-2. Run the docker build command (assuming you've already installed docker from [http://docker.com/] (http://docker.com/) inside the downloaded repository
-Note: the -t tag command, gives a repository name for your image.  This is an example:
-~~~{.bash}
-docker build -t mesap_t_yourname .
-~~~
-Note: the -t tag command, gives a repository name for your image.  You can replace your name with whatever you wish to use to reference and version your own version of the mesap_t. We use our own internal docker repository, and versioning system to refer to mesap_t.
+The same output files will be created as described above.

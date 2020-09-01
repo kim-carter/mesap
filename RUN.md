@@ -5,6 +5,11 @@ Following are instructions for using MESAP through the [Singularity](https://git
 
 #### Reference MESAP version 3.0
 
+## Quick Shortcuts to key parts of the documentation
+- [Items to check before you run](https://github.com/kim-carter/mesap/blob/master/RUN.md#before-you-use-the-pipelines-please-check-the-following-items)
+- [Run MESAP via Singularity at TKI](https://github.com/kim-carter/mesap/blob/master/RUN.md#singularity--tki)
+- [What output files are created?](https://github.com/kim-carter/mesap/blob/master/RUN.md#what-output-files-are-created)
+
 ## What pipelines and software are contained in this pipeline?
 There are specific versions of each software tool tied to each MESAP version (eg MESAP 3.0 vs 2.0 vs 1.0). Details of the specific software tool versions can be found in the [README.md](README.md) and the git history of the [Dockerfile](Dockerfile) in the [MESAP git repository](https://github.com/kim-carter/mesap).  
 

@@ -1,4 +1,4 @@
-# Building MEdical Sequence Analysis Pipeline (MESAP)
+# MEdical Sequence Analysis Pipeline (MESAP) Build Instructions
 Following are instructions to build/update the MESAP package for both the Singularity and Docker container platforms, and to build/update the reference mesap_data.  **Whenever you would like to upgrade software in the pipelines, or to add new components or tools, you will need rebuild MESAP. Whenever you wish to upgrade the reference data files, you also need to rebuild MESAP** (as the versions and names of reference data files are tied to the pipelines via environment variables).
 
 ## 1. Clone the MESAP repository from GitHub
@@ -6,10 +6,16 @@ Firstly, grab the latest version of the MESAP code from the github home, using e
 
 ~~~{.bash}
 git clone https://github.com/kim-carter/mesap.git
-~~~
+¬¬¬
 
 ## 2. (optional) Make changes to MESAP software as required
 If you are making changes to the software versions in the pipelines, once you have checked out the git repository, you should follow standard git process eg as described [here](https://guides.github.com/introduction/git-handbook/) to commit and log changes to the repository.
+
+Everything is created from the [Dockerfile](Dockerfile), which sets up the container for running everything in, including installing each of the tools used in each of the pipelines.  If you wish to add new version of tools (or just add new tools), you should follow the documented examples in the Dockerfile, which illustrate how to unzip/install each tool and get ready to run.
+
+Also in the Docke
+
+
 
 ## 3. Build the Docker image
 Once you have a copy of the MESAP files you can build the image for docker use, which also serves as a basis for the singularity image. To run this command, you will need to have [docker](https://www.docker.com) installed.
@@ -18,7 +24,7 @@ Once you have a copy of the MESAP files you can build the image for docker use, 
 cd mesap
 docker build -t mesap:3.0 . 
 ~~~
-Note: *mesap:3.0* is the tag assigned to the built docker image. If you make changes to MESAP, then using the different tag versions (eg 3.0 vs 3.1 etc) capture when changes are made
+Note: *mesap:3.0* is the tag assigned to the built docker image. If you make changes to MESAP, then using the different tag versions (eg 3.0 vs 3.1 etc) capture when changes are made.
 
 ## 4. Build the Singularity image
 Once you have built the Docker image for MESAP, you can build the image for Singularity use. To run this command, you will need to have [singularity](https://github.com/hpcng/singularity/releases) installed.

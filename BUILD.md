@@ -6,16 +6,12 @@ Firstly, grab the latest version of the MESAP code from the github home, using e
 
 ~~~{.bash}
 git clone https://github.com/kim-carter/mesap.git
-¬¬¬
+~~~
 
 ## 2. (optional) Make changes to MESAP software as required
 If you are making changes to the software versions in the pipelines, once you have checked out the git repository, you should follow standard git process eg as described [here](https://guides.github.com/introduction/git-handbook/) to commit and log changes to the repository.
 
-Everything is created from the [Dockerfile](Dockerfile), which sets up the container for running everything in, including installing each of the tools used in each of the pipelines.  If you wish to add new version of tools (or just add new tools), you should follow the documented examples in the Dockerfile, which illustrate how to unzip/install each tool and get ready to run.
-
-Also in the Docke
-
-
+Everything is created from the [Dockerfile](Dockerfile), which sets up the container for running everything in, including installing each of the tools used in each of the pipelines.  If you wish to add new version of tools (or just add new tools), you should follow the documented examples in the Dockerfile, which illustrate how to unzip/install each tool and get ready to run. Programs should be located in the *programs* subfolder for example.
 
 ## 3. Build the Docker image
 Once you have a copy of the MESAP files you can build the image for docker use, which also serves as a basis for the singularity image. To run this command, you will need to have [docker](https://www.docker.com) installed.
@@ -36,11 +32,22 @@ singularity build mesap_3.0.sif docker-daemon://mesap:3.0
 Note: *mesap:3.0* is the tag assigned to the built docker image - change this to match the tag you've assigned.
 Note: *mesap_3.0.sif* is the name of the singularity binary you've just created (this can be changed of course)
 
-## What reference / annotation files that the pipelines use?
-We've bundled up all of the necessary genome sequence and annotation files for each of the Human, Mouse and Rat pipelines to ensure that the pipelines and reference data files themselves are repeatable and reproducible.  The descriptions of how the data files were created are detailed elsewhere in the mesap_data git repository, and are summarised below.
+## 5. (optional) Build the mesap_data reference data
+Once you have built the Docker and Singularity images for MESAP, you also need to have the mesap_data folder containing the reference sequences and annotations.  In the Dockerfile are the environment variables used to configure the annotation and reference files used for each pipeline. 
 
-Reference files included in **version 2.0** are:
-- for the Human pipeline we are using the HG19/GRCH37 genome build from UCSC, along with the Gencode GTF annotation (https://www.gencodegenes.org/releases/) version 19 (to most recent vuild for HG19 available) using level 1 & 2 trancripts only, supplemented with genome annotation from Ensembl 75 (the last HG19 release for Ensembl)
-- for the Mouse pipeline we are using the MM11/GRCm38.p5 genome build from Sanger/Gencode, along with the Gencode GTF annotation (https://www.gencodegenes.org/releases/) version M12 using level 1 & 2 trancripts only, supplemented with genome annotation from Ensembl 87 (the latest release for MM11).
-- for the Rat pipeline we are using the RN6 genome build from Ensembl, along with the Ensembl GTF annotation details from Ensembl 87 (the latest release for RN6).
+For example, the ones relevant to the human pipeline are:
+~~~{.bash}
+ENV HUMAN_INDEX=/mesap_data/human/GRCh38
+ENV HUMAN_GENOME=/mesap_data/human/GRCh38.primary_assembly.genome.fa
+ENV HUMAN_GTF=/mesap_data/human/gencode.v34.annotation.gtf
+ENV HUMAN_SPLICE=/mesap_data/human/human_splice
+ENV HUMAN_EXON=/mesap_data/human/human_exon
+ENV HUMAN_ENSMAP=/mesap_data/human/Biomart_E100_human.txt
+~~~
 
+Should any changes need to occur to the MESAP reference data, then there should be corresponding updates to the environment variables defined in the Dockerfile, plus the new files should then be copied to the new reference data folders.
+
+### Script to populate mesap_data
+The script to download and generate all of the mesap_data data for MESAP 3.0 is located in [scrips/mesap_databuild.sh](https://github.com/kim-carter/mesap/blob/master/scripts/mesapdata_build.sh).   Please note, at the present moment the script does not explictly create the necessary directories for each species ie once the build script is run, you have to manually copy all of the human related data files to a subdir called "human" (and so on for mouse and rat).
+
+Please note: the HISAT aligner index building process requires very large abouts of system memory - in excess of 200-300GB of RAM for the human and mouse genones for examples.

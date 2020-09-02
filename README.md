@@ -3,9 +3,9 @@ This is the homepage for the MEdical Sequence Analysis Pipeline (MESAP) bioinfor
 
 MESAP provides the tools to complete the first 'stage' of any RNA-seq analysis that would typically involve basic pre-alignment QC of the raw data files, alignment to a reference sequence, quantification at both the transcript and gene level, and post-alignment QC.   Once you have your quantified genes or transcripts, it's then up to you to take forward the next stage of analyses where you would typically preform differential gene expression (or transcript expression) between the experimental groups in your study (as per the study design), followed up by pathway and ontology enrichment analyses and/or gene network analyses. Most of the downstream analyses are conducted in R, and we provide you with R objects and R-compatiable files to readily work with at the end of the MESAP pipeline.
 
-## RUN INSTRUCTIONS
-Run instructions are contained in [RUN.md](run.md)
-Build instructions are contained in [BUILD.md](BUILD.md)
+## INSTRUCTIONS
+* Run instructions are contained in [RUN.md](run.md)
+* Build instructions are contained in [BUILD.md](BUILD.md)
 
 ## Other important and useful information
 MESAP is really the first stage or phase of RNA-seq analysis, it's certainly not the endpoint.  Once you have your quantified transcripts or gene counts, you need to perform differential expression analysis fitting the design of your study (typically done in R via Limma and possibly EdgeR/Voom or directly in Ballgown in R), then follow it up with pathway enrichment, ontology enrichment and/or network analysis and so on. All of these steps may likely require biostatistical and bioinformatics expertise, and we strongly recommend you consult/involve an expert in this type of analysis right from the design stage.

@@ -1,0 +1,28 @@
+MESAP VERSION: 3.0 - August 2020
+--------------------------------
+
+DOCKER BASE OS:
+Ubuntu Linux 18.04 LTS x64 
+
+
+SOFTWARE VERSIONS:
+BPipe: 0.9.9.9 from http://docs.bpipe.org/ 
+HiSAT: 2.2.0 from http://daehwankimlab.github.io/hisat2/
+StringTie: 2.1.3b from https://ccb.jhu.edu/software/stringtie/ 
+Samtools: 1.10 from http://www.htslib.org/
+Samstat: 1.5.2 from http://samstat.sourceforge.net/ (note this is a TKI modified version of samstat)
+FastQC: 0.11.9 from https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+MultiQC: 1.9 (python module) from https://multiqc.info/ 
+R: 3.6.3
+BioConductor: 3.10
+Ballgown: 2.18 
+
+
+REFERENCE DATA VERSIONS: (mesap_data) 
+Ensembl Version 100 (April 2020) human/mouse/rat mappings for Ensembl Stable ID, Gene Name, Gene Description and NCBI/Ensembl ID obtained from Biomart
+Human reference sequence: Gencode 34 - GRCh38.primary_assembly.genome.fa
+Human reference annotation: Gencode 34 - gencode.v34.annotation.gtf (which we then extract only the high quality level 1 and level 2 annotations)
+Mouse reference sequence: Gencode M25 - GRCm38.primary_assembly.genome.fa
+Mouse reference annotation: Gencode M25 - gencode.vM25.annotation.gtf (which we then extract only the high quality level 1 and level 2 annotations)
+Rat reference sequence: Ensembl 100 RN6 sequence
+Rat reference annoation: Ensembl 100 RN6 GTF

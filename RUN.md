@@ -11,16 +11,24 @@ Following are instructions for using MESAP through the [Singularity](https://git
 - [What output files are created?](https://github.com/kim-carter/mesap/blob/master/RUN.md#what-output-files-are-created)
 
 ## What pipelines and software are contained in this pipeline?
-There are specific versions of each software tool tied to each MESAP version (eg MESAP 3.0 vs 2.0 vs 1.0). Details of the specific software tool versions can be found in the [README.md](README.md) and the git history of the [Dockerfile](Dockerfile) in the [MESAP git repository](https://github.com/kim-carter/mesap).  
+There are specific versions of each software tool tied to each MESAP version (eg MESAP 3.0 vs 2.0 vs 1.0). Details of the specific software tool versions can be found in the [VERSIONS.txt](VERSIONS.txt) and in the [Dockerfile](Dockerfile) (and its history of changes) in the [MESAP git repository](https://github.com/kim-carter/mesap).  
 
-In the current version of MESAP there are 3 simple RNA-seq pipelines (human, mouse and rat), which contain no QC steps in the pipeline to get you a quick answer; and there are 3 piplines that run the full pre- and post-alignment QC process, in addition to the standard alignment->gene and transcript quantification.
+In the current version of MESAP there are 3 simple RNA-seq pipelines (human, mouse and rat), which contain no QC steps in the pipeline to get you a quick answer; and there are 3 piplines that run the full pre- and post-alignment QC process, in addition to the standard alignment->gene and transcript quantification. When running MESAP, you need to select the appropriate pipeline, either:
+* rnaseq_human.groovy
+* rnaseq_mouse.groovy 
+* rnaseq_rat.groovy
+* rnaseq_human_fullqc.groovy
+* rnaseq_mouse_fullqc.groovy
+* rnaseq_rat_fullqc.groovy
 
-When running MESAP, you need to select the appropriate pipeline, either **rnaseq_human.groovy / rnaseq_mouse.groovy / rnaseq_rat.groovy** OR **rnaseq_human_fullqc.groovy / rnaseq_mouse_fullqc.groovy / rnaseq_rat_fullqc.groovy**.   Note: if you run the simple pipelines first of all, you can always run the _fullqc version of the pipeline quickly afterwards, as MESAP will detect any already produced files (eg the alignment bam files) and will skill these,
+Note: if you run the simple pipelines first of all, you can always run the _fullqc version of the pipeline quickly afterwards, as MESAP will detect any already produced files (eg the alignment bam files) and will skill these,
 
 MESAP also contains separate QC pipelines for each of the major tools, namely pre-alignment QC with Fastqc (run fastqc,groovy); post-alignment QC with Samstat (run samstat,groovy); and QC results (and alignment results if available) aggregation with Multiqc (run multiqc.groovy).  You can run any of these separately from the main pipelines if you wish to obtain specific QC results separately for any reason.
 
 ## What reference / annotation files do the pipelines use?
-MESAP comes with the the necessary genome sequence and annotation files for each of the Human, Mouse and Rat pipelines to ensure that the pipelines and reference data files themselves are repeatable and reproducible.  The descriptions of how the data files were created are detailed elsewhere in the mesap_data git repository, in the [mesapdata_build.sh](scripts/mesapdata_build.sh).  **Briefly, the current 3.0 build uses Gencode 34 human (GRCh38), Gencode 25 mouse (GRCm38), and Rat 6.0 from Ensembl version 100, with other identifier mappings also from Ensembl 100**.
+MESAP comes with the the necessary genome sequence and annotation files for each of the Human, Mouse and Rat pipelines to ensure that the pipelines and reference data files themselves are repeatable and reproducible.  The descriptions of how the data files were created are detailed elsewhere in the mesap_data git repository, in the [mesapdata_build.sh](scripts/mesapdata_build.sh). 
+
+**Briefly, the current 3.0 build uses Gencode 34 human (GRCh38), Gencode 25 mouse (GRCm38), and Rat 6.0 from Ensembl version 100, with other identifier mappings also from Ensembl 100**.  Full details are contained in the [VERSIONS.txt](VERSIONS.txt) file.
 
 ## Before you use the pipelines, please check the following items
 a) Any input files (standard gzipped FASTQ files) need to be in the standard naming format, which AGRF and other providers normally produce for you. Illumina (and other) FASTQ files use the following naming scheme:

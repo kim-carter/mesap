@@ -1,4 +1,4 @@
-#!usr/bin/perl
+#!/usr/bin/perl
 
 # Reads CSV counts in from R with Gencode ENSID as first column
 # We then fix this ID, and look up with the provided ensembl mapping file and write a final file

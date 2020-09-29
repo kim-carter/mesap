@@ -72,7 +72,9 @@ while(<IN>)
 	else
 	{
 		# not found in lookup 
-		
+
+		$line =~ s/,/\t/g;
+
 		#save to missing list
 		print MISS "$cols[0]\n";
 		

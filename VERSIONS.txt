@@ -16,7 +16,7 @@ MultiQC: 1.9 (python module) from https://multiqc.info/
 R: 3.6.3
 BioConductor: 3.10
 Ballgown: 2.18 
-
+GenomicAlignments: 1.22.1 (from BioC 3.10) (summarize overlaps)
 
 REFERENCE DATA VERSIONS: (mesap_data) 
 Ensembl Version 100 (April 2020) human/mouse/rat mappings for Ensembl Stable ID, Gene Name, Gene Description and NCBI/Ensembl ID obtained from Biomart

@@ -12,9 +12,21 @@ def get_sample_filename_nopath_noextension(filename)
   // strip path
   def m = filename.split("/")[-1]
 
-  //return first part of file name irrespective of extensions (s)
-  return m.split("\\.")[0]
+  // added fix for if filenames have other "." characters (other than .fastq.gz which is assumed)
+  def lastIndex = m.lastIndexOf(".");
+  def secondLastIndex = lastIndex > 0 ? m.lastIndexOf(".", lastIndex - 1) : -1;
+  if (secondLastIndex >= 0)
+  {
+  	def m2 = m.substring(0,secondLastIndex);
+	return m2
+  }
+  else
+  {
+	//return first part of file name irrespective of extensions (s)
+  	return m.split("\\.")[0]
+  }
 }
+
 
 run_fastqc = {
         output.dir = "/OUTPUT/qc"

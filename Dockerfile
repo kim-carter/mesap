@@ -30,11 +30,8 @@ RUN R -e 'install.packages("BiocManager", repos="https://cran.curtin.edu.au"); B
 
 # Make dirs for copying local data into
 RUN mkdir /mesap
-RUN mkdir /mesap/doc
 RUN mkdir /mesap/modules
-RUN mkdir /mesap/programs
 RUN mkdir /mesap/pipelines
-RUN mkdir /mesap/scripts
 RUN mkdir /mesap/mesap_data
 
 
@@ -89,8 +86,7 @@ RUN apt-get update && apt-get install -y --force-yes locales python3-pip && rm -
 
 
 
-# Copy and setup necessary docs, scripts, modules and pipelines
-COPY doc/ /mesap/doc
+# Copy and setup necessary scripts, modules and pipelines
 COPY modules/ /mesap/modules
 COPY pipelines/ /mesap/pipelines
 COPY scripts/ /mesap/scripts
